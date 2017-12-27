@@ -20,5 +20,4 @@ watch:
 	latexmk -pvc -jobname=$(OUTPUT) $(INPUT)
 
 push: all
-	git add -A
-	git commit
+	git add -A && git commit && git push origin master
