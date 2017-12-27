@@ -21,3 +21,6 @@ watch:
 
 push: all
 	git add -A && git commit && git push origin master
+
+commit: all
+	git add -A && git commit
