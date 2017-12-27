@@ -18,3 +18,7 @@ view:
 
 watch:
 	latexmk -pvc -jobname=$(OUTPUT) $(INPUT)
+
+push: all
+	git add -A
+	git commit
