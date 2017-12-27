@@ -1,0 +1,70 @@
+\section{数式}
+\subsection{挿入方法}
+{\TeX}の大きな特徴は綺麗な数式．
+挿入方法には文中に入れる方法と別の行にセンタリングして入れる方法がある．
+文中に数式を入れたかったら，は\verb+$y=f(x)$+（$y=f(x)$）のように\verb+$+にはさむ．
+別行に表示したかったらequation環境かeqnarray環境を使えばよい．
+eqnarray環境は複数行の数式を位置を揃えて記述したい場合に用いる．
+equation環境だと
+\begin{equation}
+  y=f(x)
+\end{equation}
+こうなり，
+eqnarray環境だと
+\begin{eqnarray}
+  y&=&f(x)     \label{eq:func} \\
+  &=&x^2-3x+1  \label{eq:polynominal}
+\end{eqnarray}
+こうなる．eqnarray環境中の\verb+&+マークは揃えたい位置の指定に用いる（=をはさめば=でそろう）．
+また，もし式(\ref{eq:func}),(\ref{eq:polynominal})のように番号をつけたくなければ，\verb+\nonumber+かeqnarray*環境を用いる．
+\begin{eqnarray}
+  y&=&f(x) \nonumber \\
+  &=&x^2-3x+1
+\end{eqnarray}
+\begin{eqnarray*}
+  y&=&f(x) \\
+  &=&x^2-3x+1
+\end{eqnarray*}
+
+\subsection{色々な数式}
+様々な記号・記法があるので詳しくはググっていただきたいが，少しだけ紹介する．
+
+\noindent \textbf{記号} \
+\verb+$\alpha$+ $\rightarrow$ $\alpha$，\verb+$\theta$+ $\rightarrow$ $\theta$，
+\verb+$\Theta$+ $\rightarrow$ $\Theta$，\verb+$\infty$+ $\rightarrow$  $\infty$
+
+\noindent \textbf{分数} \
+\verb+$\frac{A}{B}$+ $\rightarrow$
+\begin{equation*}
+  \frac{A}{B}
+\end{equation*}
+
+\noindent \textbf{括弧} \
+\verb+\left(, \right), \left[, \right]+など．高さも調節してくれる．
+\begin{equation*}
+  f(x)=\left \{ \begin{array}{l}
+    1 \ (x=1のとき) \\
+    0 \ (x\neq1のとき)
+  \end{array}
+  \right.
+\end{equation*}
+
+\begin{flushleft}
+\noindent \textbf{文字装飾} \
+\verb+$x^{2a}$+ $\rightarrow$ $x^{2a}$，
+\verb+$x_{2b}$+ $\rightarrow$ $x_{2b}$，
+\verb+$\overline{g}$+ $\rightarrow$ $\overline{g}$，
+\verb+$\underline{g}$+ $\rightarrow$ $\underline{g}$，
+\verb+${\bm y}=A{\bm x}$+ $\rightarrow$ ${\bm y}=A{\bm x}$（bm.styを使用）
+\end{flushleft}
+
+\noindent \textbf{斜体にしない文字} \
+\verb+${\rm sin}$+ $\rightarrow$ ${\rm sin}$
+または
+\verb+$\sin$+ $\rightarrow$ $\sin$
+
+\noindent \textbf{総和} \
+\verb+$S_n=\sum_{k=1}^{n}(x_k)^2$+ $\rightarrow$
+\begin{equation*}
+  S_n=\sum_{k=1}^{n}(x_k)^2
+\end{equation*}

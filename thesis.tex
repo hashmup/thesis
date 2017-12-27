@@ -1,0 +1,54 @@
+\documentclass[a4j,12pt,onecolumn]{ujarticle} % jsbook, jsreportなど
+
+%% マージン等の設定
+%% A4: 210 x 297 mm
+%% jsクラスではフォントサイズを10ptから変更するときには長さ単位にtrueをつける必要がある．
+%% inch->trueinch, mm->truemm, cm->truecmなど．
+\setlength{\textwidth}{15truecm}       %% 150mm + 1inch(25.4mm)*2 + 4.6mm*2 = 210mm
+\setlength{\oddsidemargin}{4.6truemm}  %% 左右余白30mm
+\setlength{\evensidemargin}{4.6truemm}
+\setlength{\textheight}{227truemm} %% 227mm + 1inch*2 + 9.6mm*2 = 297mm
+\setlength{\headheight}{9.6truemm} %% 上下余白35mm
+\setlength{\topmargin}{9.6truemm}
+\setlength{\headsep}{-15truemm}
+%% 代わりに以下2行でもOK
+%% \usepackage{geometry}
+%% \geometry{top=35truemm,bottom=35truemm,left=30truemm,right=30truemm}
+
+%% \renewcommand{\baselinestretch}{0.82}
+
+%% 使いたいパッケージを指定
+\usepackage[dvipdfmx]{graphicx, color} % 画像挿入
+\usepackage{styles/mediabb} % PDFなどのbounding boxを取得してくれる
+\usepackage{amsmath} % 数式用パッケージ
+\usepackage{url} % URL挿入用
+\usepackage{color} % 文字色指定
+\usepackage{bm} % bold math （数式中のベクトルなどで太字にしたいとき）
+
+%% マクロ（ユーザ定義命令）を宣言
+\newcommand{\hoge}{\textcolor{red}{ほげほげ}}    % 引数なし
+\newcommand{\Hoge}[2]{\textcolor{#1}{#2#2}}      % 引数あり
+\newcommand{\HOGE}[2][red]{\textcolor{#1}{#2#2}} % 引数あり（オプション引数付き）
+
+\title{ 自動チューニング化手法 }
+\author{井上裕太}
+\date{\today}
+
+%% --- 以下本文 ---
+\begin{document}
+\maketitle %% タイトルを表示
+
+% \chapter{チャプター}
+% jsarticleには\verb+\chapter+命令がない．
+
+%% 目次作成
+\tableofcontents
+\listoffigures
+\listoftables
+
+\input{abstract/abstract}
+\input{introduction/introduction}
+\input{literature-review/literature-review}
+\input{method/method}
+\input{experiment/experiment}
+\input{conclusion/conclusion}
