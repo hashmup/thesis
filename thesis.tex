@@ -11,6 +11,7 @@
 \setlength{\headheight}{9.6truemm} %% 上下余白35mm
 \setlength{\topmargin}{9.6truemm}
 \setlength{\headsep}{-15truemm}
+\setcounter{secnumdepth}{4}
 %% 代わりに以下2行でもOK
 %% \usepackage{geometry}
 %% \geometry{top=35truemm,bottom=35truemm,left=30truemm,right=30truemm}
@@ -24,6 +25,7 @@
 \usepackage{url} % URL挿入用
 \usepackage{color} % 文字色指定
 \usepackage{bm} % bold math （数式中のベクトルなどで太字にしたいとき）
+\usepackage{titlesec}
 
 %% マクロ（ユーザ定義命令）を宣言
 \newcommand{\hoge}{\textcolor{red}{ほげほげ}}    % 引数なし
@@ -51,5 +53,5 @@
 \input{method/method}
 \input{experiment/experiment}
 \input{conclusion/conclusion}
-
+\input{appendix/appendix}
 \end{document}
