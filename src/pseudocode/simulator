@@ -1,0 +1,37 @@
+# Global variables
+MAX_NUM_JOB = 4
+running_job = []
+
+main():
+  watch_job()
+
+  while model_param_candidates.has_next()
+    model_param = model_param_candidates.next()
+    while compile_param_candidates.has_next()
+      compile_param = compile_param_candidates.next()
+
+      build(model_param, compile_param)
+
+      while machine_param_candidates.has_next()
+        machine_param = machine_param_candidates.next()
+
+        job_id = run(machine_param)
+        running_job.add(job_id)
+
+      machine_param.reset()
+    compile_param.reset()
+
+run(machine_param):
+  while running_job's size >= MAX_NUM_JOB:
+    sleep 10
+  job = make_job(machine_param)
+  job_id = deploy(job)
+  return job_id
+
+watch_job():
+  while running_job's size == 0:
+    sleep 10
+  for job_id in running_job:
+    if is_finished(job_id):
+      summarize(job_id)
+      running_job.remove(job_id)

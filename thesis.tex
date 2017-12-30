@@ -26,6 +26,28 @@
 \usepackage{color} % 文字色指定
 \usepackage{bm} % bold math （数式中のベクトルなどで太字にしたいとき）
 \usepackage{titlesec}
+\usepackage{listings}
+
+% コード読み込みのための設定
+\lstset{%
+  language={Python},
+  basicstyle={\small},%
+  identifierstyle={\small},%
+  commentstyle={\small\itshape},%
+  keywordstyle={\small\bfseries},%
+  ndkeywordstyle={\small},%
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},%
+  numbers=left,%
+  xrightmargin=0zw,%
+  xleftmargin=3zw,%
+  numberstyle={\scriptsize},%
+  stepnumber=1,
+  numbersep=1zw,%
+  lineskip=-0.5ex%
+}
 
 %% マクロ（ユーザ定義命令）を宣言
 \newcommand{\hoge}{\textcolor{red}{ほげほげ}}    % 引数なし
