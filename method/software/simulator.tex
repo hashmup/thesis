@@ -11,12 +11,36 @@
 \lstinputlisting[caption=シミュレータ疑似コード,label=hogehoge,frame=single]{src/pseudocode/simulator}
 }
 この疑似コードは大きく3つの機能から成立しているため,次にその詳細を示す.\\
-\paragraph{全体ループ}
+\paragraph{全体ループ}~\\
 疑似コード内の8-22行目までが全体のループを構成している.\\
 {\footnotesize
-\lstinputlisting[caption=シミュレータ全体ループ,label=hogehoge,frame=single, firstline=8, lastline=22]{src/pseudocode/simulator}
+\lstinputlisting[caption=シミュレータ 全体ループ,label=hogehoge,frame=single, firstline=8, lastline=22]{src/pseudocode/simulator}
 }
-\paragraph{ジョブ実行}
-\paragraph{ジョブ結果の集約}
+ループ内部では,プログラムのビルド,ジョブスクリプトの生成,そして生成した実行形式とジョブスクリプトをジョブキューにdeployするという3つのことを行っている.\\
+プログラムのビルド,ジョブの実行に比べジョブスクリプトの生成にかかる時間は無視できる程度のものであるため,ジョブスクリプトの生成をもっとも内側のループに持ってきた.\\
+これにより,ジョブキューでジョブが実行されるのを待っているうちにビルドを行うことができ,全体としてシミュレーションの時間を減らすことが期待できる.\\
+\paragraph{ジョブ実行}~\\
+{\footnotesize
+\lstinputlisting[caption=シミュレータ ジョブ実行,label=hogehoge,frame=single, firstline=24, lastline=29]{src/pseudocode/simulator}
+}
+スーパーコンピュータ京のような複数のユーザーが用いるシステムにおいて,ジョブを一度に大量に投げるのは好ましくない.\\
+そのため,ジョブをジョブキューに投げる前に事前に設定した最大同時ジョブ実行数と現在の実行中のジョブの数を比較し,最大数と同数なのであれば待機する処理が必要である.\\
+本研究では,グローバル変数として現在実行中のジョブのIDを保持するリストを定義し,そのリストの数と比較することで実現している.\\
+また,後述するジョブ結果の集約においてこのジョブIDを保持するリストは別スレッドから参照されており,リスト内のジョブが完了した段階でmutexによってロックされた上で更新される.\\
+\paragraph{ジョブ結果の集約}~\\
+{\footnotesize
+\lstinputlisting[caption=シミュレータ ジョブ結果の集約,label=hogehoge,frame=single, firstline=31, lastline=37]{src/pseudocode/simulator}
+}
+様々なパラメータの組の中から最適な組み合わせを選びたいため,それぞれのジョブの結果とパラメータの組を結びつける必要がある.\\
+ジョブが完了したか否かは,ジョブの状況を取得するコマンドを利用することで得ることができる.\\
+次にスーパーコンピュータ京と研究室クラスタで上記のコマンドを実行した結果を示す.\\
+{\footnotesize
+\begin{lstlisting}[numbers=none]
+京
+>> pjstat
 
+研究室クラスタ
+>> qstat
+\end{lstlisting}
+}
 \subsubsection{モデルに依存するパラメータ}
