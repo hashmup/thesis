@@ -15,9 +15,17 @@ Pyenvを利用して汎用的な環境を作成することにした.\\
 \indent ・make setup\\
 \indent \indent 上記の二つのコマンドをinstall,pullの順で実行する.\\
 ・scripts/\\
+Makefileで実際に実行されるシェルスクリプト群であり,NEURON本体のインストールと本研究で用いるPythonの環境を整える役割を担っている.\\
 \indent ・setup\_env\_and\_install\_libraries.sh\\
-\indent \indent このスクリプトは大きくわけ2つのことをする.\\
-\indent \indent ・Pyenvのインストール\\
-\indent \indent ・genieで必要となるPythonのライブラリをインストール\\
+以下に示したように,Pyenvを用いてPython3 ( TODO: reference)のインストールと実行の際に必要となるライブラリをインストールしている.\\
+( TODO: ライブラリの説明)
+\indent {\footnotesize
+\lstinputlisting[caption=setup\_env\_and\_install\_libraries.sh,label=hogehoge,frame=single]{src/script/setup_env_and_install_libraries.sh}
+}
+次に示すように,本研究の自動チューニングの対象であるNEURONのインストールを行っている.\\
+NEURONのディレクトリが存在しない場合は,Githubからクローンをした後に必要なディレクトリの追加を行う.\\
+一方で,存在する場合は最新のものへの更新を行っている.\\
 \indent ・pull\_required\_projects.sh\\
-\indent \indent このスクリプトはシミュレーションソフトであるNEURON環境を構築することを目的としている.\\
+\indent {\footnotesize
+\lstinputlisting[caption=pull\_required\_projects.sh,label=hogehoge,frame=single]{src/script/pull_required_projects.sh}
+}
