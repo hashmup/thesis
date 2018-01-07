@@ -78,14 +78,14 @@
 \subparagraph{ジョブ生成ループ}~\\
 疑似コード内の8-22行目までがジョブ生成のためのループを構成している.\\
 {\footnotesize
-\lstinputlisting[caption=シミュレータ 全体ループ,label=hogehoge,frame=single, firstline=8, lastline=22]{src/pseudocode/simulator}
+\lstinputlisting[caption=シミュレータ ジョブ生成ループ,label=pseudocode-simulator-job-gen-loop,frame=single, firstline=8, lastline=22]{src/pseudocode/simulator}
 }
 ループ内部では,プログラムのビルド,ジョブスクリプトの生成,そして生成した実行形式とジョブスクリプトをジョブキューにdeployするという3つのことを行っている.\\
-プログラムのビルド,ジョブの実行に比べジョブスクリプトの生成にかかる時間は無視できる程度のものであるため,ジョブスクリプトの生成をもっとも内側のループに持ってきた.\\
-これにより,ジョブキューでジョブが実行されるのを待っているうちにビルドを行うことができ,全体としてシミュレーションの時間を減らすことが期待できる.\\
+すでに ( TODO: add re)で述べたようにパラメータ候補の選択順を実効形式の生成に関わるものを先にすることで,非同期的に実行形式の生成とジョブの実行を行うことができる.\\
+\\
 \subparagraph{ジョブ実行}~\\
 {\footnotesize
-\lstinputlisting[caption=シミュレータ ジョブ実行,label=hogehoge,frame=single, firstline=24, lastline=29]{src/pseudocode/simulator}
+\lstinputlisting[caption=シミュレータ ジョブ実行,label=pseudocode-simulator-job-deploy,frame=single, firstline=24, lastline=29]{src/pseudocode/simulator}
 }
 スーパーコンピュータ京のような複数のユーザーが用いるシステムにおいて,ジョブを一度に大量に投げるのは好ましくない.\\
 そのため,ジョブをジョブキューに投げる前に事前に設定した最大同時ジョブ実行数と現在の実行中のジョブの数を比較し,最大数と同数なのであれば待機する処理が必要である.\\
@@ -93,17 +93,33 @@
 また,後述するジョブ結果の集約においてこのジョブIDを保持するリストは別スレッドから参照されており,リスト内のジョブが完了した段階でmutexによってロックされた上で更新される.\\
 \paragraph{ジョブ結果の集約}~\\
 {\footnotesize
-\lstinputlisting[caption=シミュレータ ジョブ結果の集約,label=hogehoge,frame=single, firstline=31, lastline=37]{src/pseudocode/simulator}
+\lstinputlisting[caption=シミュレータ ジョブ結果の集約,label=pseudocode-simulator-job-summarize,frame=single, firstline=31, lastline=37]{src/pseudocode/simulator}
 }
 様々なパラメータの組の中から最適な組み合わせを選びたいため,それぞれのジョブの結果とパラメータの組を結びつける必要がある.\\
-ジョブが完了したか否かは,ジョブの状況を取得するコマンドを利用することで得ることができる.\\
-次にスーパーコンピュータ京と研究室クラスタで上記のコマンドを実行した結果を示す.\\
+先行研究 ( TODO: ref)ではFLOPSを用いて計算性能を測っていたが,そのためにはそれぞれのモデルでシミュレーションを行う際に浮動小数点演算が何回行われるかを
+事前または事後的に知る必要がある.\\
+しかしながら本研究では,事前情報のない新規のモデルに対しても自動チューニングの対象となるためFLOPSは指標として適さない.
+そのため,本研究ではNEURON内での実行時間をシミュレーション内部で終了時に出力させ,指標として用いることにした.\\
+{\footnotesize
+\lstinputlisting[caption=NEURON内部での実行時間出力設定,label=neuron-job-script,frame=single]{src/job/output}
+}
+{\footnotesize
+\lstinputlisting[caption=ジョブ実行結果,label=job-output,frame=single]{src/job/output}
+}
+ジョブの実行時間のフォーマットは固定されているため,
+( TODO: 正規表現)
+上記の正規表現を用いて取得することができる.\\
+Pythonにおいては,
+{\footnotesize
+\lstinputlisting[caption=ジョブ実行結果取得,label=get-exec-time,frame=single]{src/python/get-exec-time.py}
+}
+として取得できる.\\
+次に,ジョブが完了しているかの判定を行う方法について述べる.\\
+ここではスーパーコンピュータ京と研究室クラスタを例にする.\\
 {\footnotesize
 \begin{lstlisting}[numbers=none]
 京
 >> pjstat
-a
-
 
 研究室クラスタ
 >> qstat
@@ -121,10 +137,22 @@ Job ID  Name  User  Time  Use S Queue
 3391.cluster               job_cluster.sh   inoue 0 R cluster
 3392.cluster               job_cluster.sh   inoue                  0 Q cluster
 3393.cluster               job_cluster.sh   inoue                  0 Q cluster
-
-
-
-
 \end{lstlisting}
 }
-\subsubsection{モデルに依存するパラメータ}
+京ではpjstat, 研究室クラスタではqstatというコマンドを用いることで現在実行中のジョブを一覧で取得することができる.\\
+この中でジョブの状態(State)を表すSの列に注目すると, まだジョブキューの中で実行を待っているQ,実行中のR,実行完了のCのようにジョブの状態を詳細に知ることができることがわかる.\\
+また,このコマンドの出力結果も同一のフォーマットに従っているため,正規表現を利用することでジョブの状態を取得することができる.\\
+ここではジョブが完了しているか否かの判定を行たいため,
+{\footnotesize
+\lstinputlisting[caption=ジョブ完了判定,label=is-job-done,frame=single]{src/python/is-job-done.py}
+}
+とすることで状態を取得することができる.\\
+
+最後に,実際の実行結果が最適化を通して変化していないことの確認も必要である.\\
+これは実行結果のファイルを見ることで判断できるが,複数プロセス・スレッドを用いた場合途中の出力結果の順番がランダムになっているという問題があった.\\
+そのため,
+{\footnotesize
+\lstinputlisting[caption=実行結果比較,label=compare-job-output,frame=single]{src/python/compare-job-output.py}
+}
+のようにして,実行結果として出力されたファイルの中でジョブIDなど固有の情報を抜いた行をソートし,
+そのハッシュ値がすべてのジョブにおいて同一であることを確認することで変化がないことを確かめた.\\
