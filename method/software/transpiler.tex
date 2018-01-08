@@ -1,1 +1,13 @@
-・MODからCのトランスパイラの説明\\
+先行研究( TODO: ref)では,モデルに依存するパラメータを調節するために,
+計算モデルが記述されたMODファイルからnmodlを介して生成されたCファイルを手動で変更を加えることで最適化を図っていた.\\
+本研究では,自動チューニングを目的としているため,このプロセスも自動化する必要があり,そのためにこのMODからCへ変換するトランスパイラを作成した.\\
+MODをパースするにあたってはDomain-Specific Languagesを作成するためのPythonライブラリである,textX ( TODO: ref)を利用した.\\
+また,MODのContext Free GrammarはMODファイルからNeuroMLを生成するためのプロジェクトであるpynmodl ( TODO: ref)のプログラムを用いた.\\
+
+\subsubsection{nmodl}
+トランスパイラを作成するにあたり参考にしたNEURONに付属しているトランスパイラであるnmodlについて述べる.\\
+コードがひどかったです...
+
+\subsubsection{アルゴリズム}
+
+\subsubsection{実装}

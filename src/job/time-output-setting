@@ -1,0 +1,31 @@
+if(pc.id == 0) {
+  printf("[id:0] Modeling Finished.\n")
+}
+if(pc.id == 0) {
+  printf("[id:0] Calculation Starts\n")
+}
+pc.barrier()
+modelfin_time = pc.time
+start_waittime = pc.wait_time
+
+# 実際の計算
+pc.psolve(tstop)
+
+if(pc.id == 0) {
+  printf("[id:0] Calculation Finished !!\n")
+}
+pc.barrier()
+stop_time = pc.time
+stop_waittime = pc.wait_time()
+stop_steptime = pc.step_time()
+stop_sendtime = pc.send_time()
+
+pc.barrier()
+if(pc.id ==0){
+  printf("\nRESULT : \n")
+	printf(" * SpikeSendMax=%d\n", pc.spike_statistics() )
+	printf(" * step=%f sec, wait=%f sec, send=%f sec\n", stop_steptime, stop_waittime-start_waittime, stop_sendtime)
+	printf(" * modeling time : %f sec\n", modelfin_time - start_time)
+	printf(" * core time : %f sec\n", stop_time-modelfin_time)
+}
+pc.barrier()

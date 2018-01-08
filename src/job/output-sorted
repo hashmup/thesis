@@ -1,0 +1,17 @@
+[3] NC = 191, SYN = 101, tmp_pre = 90, tmp_post = 92
+[5] NC = 184, SYN = 94, tmp_pre = 90, tmp_post = 85
+[7] NC = 198, SYN = 108, tmp_pre = 90, tmp_post = 99
+[8] NC = 196, SYN = 106, tmp_pre = 90, tmp_post = 97
+SPIKE : 	 5.025000	 1
+SPIKE : 	 5.025000	 54
+SPIKE : 	 5.350000	 55
+SPIKE : 	 5.350000	 57
+SPIKE : 	 5.025000	 61
+SPIKE : 	 105.350000	 62
+SPIKE : 	 105.025000	 234
+SPIKE : 	 105.350000	 235
+SPIKE : 	 105.350000	 237
+SPIKE : 	 105.350000	 239
+SPIKE : 	 105.350000	 242
+[6] nsendmax=5 nsend=54 nrecv=1512 nrecv_useful=33
+[26] nsendmax=5 nsend=54 nrecv=1512 nrecv_useful=18

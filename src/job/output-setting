@@ -1,0 +1,23 @@
+proc print_stat() {
+  for i = 0, cells.count-1 {
+    printf("[proc:%02d] synlist %d\n", pc.id, cells.object(i).synlist.count())
+  }
+}
+
+proc spikeout() {
+  local i, count, rank
+  localobj fobj, tmpmt
+  if(pc.id == 0) {
+    printf("\n\ttime [ms]\t cell_id\n")
+  }
+  pc.barrier()
+  for i=0, tvec.size()-1 {
+    printf("SPIKE : \t %f\t %d\n", tvec.x[i], idvec.x[i])
+  }
+}
+
+proc printSpikeStat() {
+  local nsendmax, nsend, nrecv, nrecv_useful
+  nsendmax = pc.spike_statistics(&nsend, &nrecv, &nrecv_useful)
+  printf("[%d] nsendmax=%d nsend=%d nrecv=%d nrecv_useful=%d\n", pc.id, nsendmax, nsend,nrecv, nrecv_useful)
+}

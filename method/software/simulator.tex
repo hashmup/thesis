@@ -45,7 +45,7 @@
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
-    \includegraphics[width=10.0cm]{./images/simulator.pdf}
+    \includegraphics[width=10.0cm, angle=-90]{./images/simulator.pdf}
     \caption{シミュレータ 構成}
     \label{fig:test}
   \end{center}
@@ -101,11 +101,11 @@
 しかしながら本研究では,事前情報のない新規のモデルに対しても自動チューニングの対象となるためFLOPSは指標として適さない.
 そのため,本研究ではNEURON内での実行時間をシミュレーション内部で終了時に出力させ,指標として用いることにした.\\
 {\footnotesize
-\lstinputlisting[caption=NEURON内部での実行時間出力設定,label=neuron-job-script,frame=single]{src/job/output}
+\lstinputlisting[caption=ベンチマークでNEURON内部での実行時間を出力している箇所,label=neuron-job-script,frame=single]{src/job/time-output-setting}
 }
-{\footnotesize
-\lstinputlisting[caption=ジョブ実行結果,label=job-output,frame=single]{src/job/output}
-}
+ここでは29行目で出力しているcore timeが実行時間に該当する.\\
+
+
 ジョブの実行時間のフォーマットは固定されているため,
 ( TODO: 正規表現)
 上記の正規表現を用いて取得することができる.\\
@@ -146,13 +146,29 @@ Job ID  Name  User  Time  Use S Queue
 {\footnotesize
 \lstinputlisting[caption=ジョブ完了判定,label=is-job-done,frame=single]{src/python/is-job-done.py}
 }
-とすることで状態を取得することができる.\\
+とすることでジョブIDを元にジョブの状態を取得することができる.\\
 
 最後に,実際の実行結果が最適化を通して変化していないことの確認も必要である.\\
 これは実行結果のファイルを見ることで判断できるが,複数プロセス・スレッドを用いた場合途中の出力結果の順番がランダムになっているという問題があった.\\
-そのため,
+ジョブの実行結果は次に示される3つの関数で出力される.\\
 {\footnotesize
-\lstinputlisting[caption=実行結果比較,label=compare-job-output,frame=single]{src/python/compare-job-output.py}
+\lstinputlisting[caption=ジョブ実行結果出力箇所,label=job-output-setting,frame=single]{src/job/output-setting}
 }
-のようにして,実行結果として出力されたファイルの中でジョブIDなど固有の情報を抜いた行をソートし,
-そのハッシュ値がすべてのジョブにおいて同一であることを確認することで変化がないことを確かめた.\\
+また,その実行結果を一部抜粋した元が次になる.\\
+{\footnotesize
+\lstinputlisting[caption=ジョブ実行結果一部抜粋,label=job-output,frame=single]{src/job/output}
+}
+仮に同じシミュレーションをシングルプロセス・シングルスレッドで行った場合,上記の結果は
+{\footnotesize
+\lstinputlisting[caption=シングルスレッドで実行する場合の実行結果,label=job-output-sorted,frame=single]{src/job/output-sorted}
+}
+のようにIDが昇順になる.\\
+そのため,実行結果を比較する際には,3種類の関数print\_stat,spikeout,printSpikeStatからの出力結果をそれぞれソートした上で比較する必要がある.\\
+本研究においては,出力の形式がそれぞれの関数で固定であり,上記の3種類の関数のみがシミュレーションの実行結果と関係しているため,
+IDを元にソートをかけ,ソート後の出力結果を格納した配列のハッシュ値を比較することで実行結果に変化がないことを確かめた.\\
+{\footnotesize
+\lstinputlisting[caption=実行結果比較コード,label=compare-job-output,frame=single]{src/python/compare-job-output.py}
+}
+すべてのジョブ結果のファイルに対し,それぞれの行が各関数に該当する正規表現と一致するか調べ,
+一致する場合はIDを元にしてならべかえる.\\
+並べ替えが終わった段階でhash値を計算し,すべてのファイルに対してhash値が共通のものであるかを確認している.\\
