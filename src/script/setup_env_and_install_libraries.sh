@@ -1,9 +1,9 @@
 #!/bin/sh
 setupIfNecessary() {
-    # .pyenvが存在しない場合はダウンロード
-    #  install時に初回のみ実行される
+    # .pyenv が存在しない場合はダウンロード
+    #  install 時に初回のみ実行される
     if [ ! -d "~/.pyenv" ]; then
-        # githubからクローンする
+        # github からクローンする
         git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
         # 必要な環境変数の設定
@@ -12,13 +12,13 @@ setupIfNecessary() {
         echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bash_profile
         exec "$SHELL"
 
-        # anaconda3-4.3.0をPythonとして利用するための設定
+        # anaconda3-4.3.0 をPython として利用するための設定
         pyenv install anaconda3-4.3.0
         pyenv local anaconda3-4.3.0
         pyenv rehash
     fi
 
-    # genie実行に必要なPythonライブラリのインストール
+    # genie 実行に必要なPython ライブラリのインストール
     pip install textx
     pip install pandas
     pip install jinja2

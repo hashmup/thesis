@@ -21,7 +21,7 @@
     \label{fig:singlejob}
   \end{center}
 \end{figure}
-\\
+~\\
 図( TODO: 番号)にあるようにジョブの実行はジョブの生成,ジョブの実行,ジョブ結果の集約の3段階に分かれており,
 ジョブの生成にかかる時間そしてジョブが実行されるまでのジョブキューでの待機時間がこの一連の動作の実行時間において大きな割合を示す.\\
 ジョブが実行されるまでの待機時間は複数のジョブを実行する場合ではジョブの実行時間と同義になるため,これはシミュレーションの内容に応じて変わるが,
@@ -41,48 +41,45 @@
 
 本研究では以上を念頭に置きシミュレータのプログラムを作成した.\\
 単一ジョブの実行 ( TODO: add ref)で述べたように,ジョブの実行をするにはジョブの生成,ジョブの実行,ジョブ結果の集約が必要となる.\\
-その中でジョブの実行はqsubやpjsubといった環境にインストールされているジョブ実行環境を利用するため,シミュレータはジョブの生成と結果の集約の役割を担う.\\
+その中でジョブの実行はqsubやpjsubといった環境にインストールされているジョブ実行環境を利用するため,シミュレータはジョブの生成と結果の集約の役割を担う.~\\
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
     \includegraphics[width=10.0cm, angle=-90]{./images/simulator.pdf}
     \caption{シミュレータ 構成}
-    \label{fig:test}
+    \label{fig:simulator}
   \end{center}
 \end{figure}
-\\
 そのため,シミュレータは次の疑似コードで示す通りジョブを生成するためのループと
 メインスレッドから切り離されたスレッドでジョブの実行状況を監視し,
-ジョブが終了したタイミングで結果の集約を行うメソッドという二つの機能から成り立っている.\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
+ジョブが終了したタイミングで結果の集約を行うメソッドという二つの機能から成り立っている.~\\
 {\footnotesize
 \lstinputlisting[caption=シミュレータ疑似コード,label=pseudocode-simulator,frame=single]{src/pseudocode/simulator}
 }
-また疑似コードを状態遷移図の形で可視化したものが次になる.\\
+上記の疑似コードを状態遷移図の形で可視化したものが次になる.\\
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
     \includegraphics[width=20.0cm]{./images/state.pdf}
     \caption{シミュレータ 状態遷移図}
-    \label{fig:test}
+    \label{fig:simulator-state}
   \end{center}
 \end{figure}
+~\\
+また,環境によってはステージングが存在せず,ジョブキューからジョブが実行される段階になって初めて実行形式とジョブスクリプトにアクセスする
+ことになるが,その場合実行形式はそれぞれのビルドごとに,ジョブスクリプトはすべてのジョブに対して区別する必要がある.\\
+そのため,実行形式に関してはビルドに関連するディレクトリのコピーをシミュレーションを実行する際に作成し,ビルドごとに参照するディレクトリを切り替え,
+ジョブスクリプトに関してはすべてのジョブに対して一意なIDを降りそのIDを元に参照させることにした.\\
+( TODO: add 図)
 \subparagraph{ジョブ生成ループ}~\\
 疑似コード内の8-22行目までがジョブ生成のためのループを構成している.\\
 {\footnotesize
 \lstinputlisting[caption=シミュレータ ジョブ生成ループ,label=pseudocode-simulator-job-gen-loop,frame=single, firstline=8, lastline=22]{src/pseudocode/simulator}
 }
+~\\
 ループ内部では,プログラムのビルド,ジョブスクリプトの生成,そして生成した実行形式とジョブスクリプトをジョブキューにdeployするという3つのことを行っている.\\
 すでに ( TODO: add re)で述べたようにパラメータ候補の選択順を実効形式の生成に関わるものを先にすることで,非同期的に実行形式の生成とジョブの実行を行うことができる.\\
-\\
+~\\
 \subparagraph{ジョブ実行}~\\
 {\footnotesize
 \lstinputlisting[caption=シミュレータ ジョブ実行,label=pseudocode-simulator-job-deploy,frame=single, firstline=24, lastline=29]{src/pseudocode/simulator}
@@ -107,7 +104,6 @@
 
 
 ジョブの実行時間のフォーマットは固定されているため,
-( TODO: 正規表現)
 上記の正規表現を用いて取得することができる.\\
 Pythonにおいては,
 {\footnotesize
@@ -123,20 +119,30 @@ Pythonにおいては,
 
 研究室クラスタ
 >> qstat
-Job ID  Name  User  Time  Use S Queue
---- --  ----  ----  ----  --- - -----
-3381.cluster  job_cluster.sh  inoue 00:44:33  C cluster
-3383.cluster  job_cluster.sh  inoue 00:23:59  C cluster
-3384.cluster  job_cluster.sh  inoue 00:47:37  C cluster
-3385.cluster  job_cluster.sh  inoue 00:24:02  C cluster
-3386.cluster  job_cluster.sh  inoue 00:23:57  C cluster
-3387.cluster  job_cluster.sh   inoue           00:47:32 C cluster
-3388.cluster               job_cluster.sh   inoue           00:24:07 C cluster
-3389.cluster               job_cluster.sh   inoue           00:24:01 C cluster
-3390.cluster               job_cluster.sh   inoue           00:18:33 R cluster
-3391.cluster               job_cluster.sh   inoue 0 R cluster
-3392.cluster               job_cluster.sh   inoue                  0 Q cluster
-3393.cluster               job_cluster.sh   inoue                  0 Q cluster
+Every 1.0s: qstat                                                                                                                                            Wed Jan 10 01:06:06 2018
+
+Job ID                    Name             User            Time Use S Queue
+------------------------- ---------------- --------------- -------- - -----
+13282.cluster              job223.sh        inoue           00:09:29 C cluster
+13283.cluster              job224.sh        inoue           00:04:46 C cluster
+13284.cluster              job225.sh        inoue           00:06:48 C cluster
+13285.cluster              job226.sh        inoue           00:05:38 C cluster
+13286.cluster              job227.sh        inoue           00:05:36 C cluster
+13287.cluster              job228.sh        inoue           00:07:16 C cluster
+13288.cluster              job229.sh        inoue           00:05:38 C cluster
+13289.cluster              job230.sh        inoue           00:07:23 C cluster
+13290.cluster              job231.sh        inoue           00:05:37 C cluster
+13291.cluster              job232.sh        inoue           00:07:15 C cluster
+13292.cluster              job233.sh        inoue           00:05:38 C cluster
+13293.cluster              job234.sh        inoue           00:07:16 C cluster
+13294.cluster              job235.sh        inoue           00:05:37 C cluster
+13295.cluster              job236.sh        inoue           00:07:07 C cluster
+13296.cluster              job237.sh        inoue           00:05:35 C cluster
+13297.cluster              job238.sh        inoue           00:07:07 C cluster
+13298.cluster              job239.sh        inoue           00:05:36 C cluster
+13299.cluster              job240.sh        inoue           00:07:08 C cluster
+13300.cluster              job241.sh        inoue           00:05:38 C cluster
+13301.cluster              job242.sh        inoue                  0 R cluster
 \end{lstlisting}
 }
 京ではpjstat, 研究室クラスタではqstatというコマンドを用いることで現在実行中のジョブを一覧で取得することができる.\\

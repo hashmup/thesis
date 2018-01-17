@@ -11,13 +11,11 @@ Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記�
 先行研究の中でも示されている通り,この中でプロファイル結果から多くの計算時間を必要とするのはDERIVATIVE ( TODO: reference)
 であり以下のパラメータの多くはDERIVATIVEの計算を行う上でキャッシュヒット率をあげることを目的としている.\\
 \subsubsection{SIMD化}
+\input{method/algorithm/simd}
 ・変数の配列化によるメモリアクセスの連続化
 \subsubsection{配列構造}
+\input{method/algorithm/structure-of-array}
 ・配列の構造変形（時間があれば）なければここを消す
-\subsubsection{配列順序}
-・変数がどう利用されるのかはその変数がどう呼び出されるかに依存する.\\
-そのため，MODファイル内に記述された方程式で関連する変数を連続して定義した方が幾分効率化されると予測できる.\\
-MODファイルから方程式部分を解析し,関連する変数のペアをUnion-find木で作り関連する変数の組の中での順序をパラメータとして配列の順序を入れ替える.\\
 \subsection{実行マシンに依存するパラメータ}
 近年のCPUはシングルコアではなく,マルチコアによって計算を並列化することで全体としての計算能力を向上させている.\\
 一方で,この並列化を行う上でのパラメータは実行するマシンごとに依存するものである.\\
@@ -26,5 +24,7 @@ MODファイルから方程式部分を解析し,関連する変数のペアをU
 OpenMPのスレッドに関与するパラメータに関する説明 ( TODO : わあああ)
 \subsubsection{プロセス数}
 MPIプロセスに関与するパラメータに関する説明 ( TODO : わあああい)
+\subsubsection{配列サイズの変形}
+\input{method/algorithm/size-of-array}
 \subsection{コンパイルに関わるパラメータ}
 TODO: 時間があれば記述する

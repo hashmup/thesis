@@ -1,0 +1,27 @@
+#!/bin/sh
+#----- ノードの数, ノード内のプロセス数を指定 -----#
+#PBS -l nodes=1:ppn=4
+#PBS -q cluster
+export OMP_NUM_THREADS=2
+NRNIV="../specials/x86_64/special -mpi"
+HOC_NAME="../hoc/bench_main.hoc"
+NRNOPT=\
+" -c MODEL=2"\
+" -c NSTIM_POS=1"\
+" -c NSTIM_NUM=400"\
+" -c NCELLS=256"\
+" -c NSYNAPSE=10"\
+" -c SYNAPSE_RANGE=1"\
+" -c NETWORK=1"\
+" -c STOPTIME=50"\
+" -c NTHREAD=16"\
+" -c MULTISPLIT=0"\
+" -c SPIKE_COMPRESS=0"\
+" -c CACHE_EFFICIENT=1"\
+" -c SHOW_SPIKE=1"
+LPG="lpgparm -t 4MB -s 4MB -d 4MB -h 4MB -p 4MB"
+MPIEXEC="mpiexec -mca mpi_print_stats 1"
+PROF=""
+cd $PBS_O_WORKDIR
+echo "${PROF} ${MPIEXEC} ${NRNIV} ${NRNOPT} ${HOC_NAME}"
+time ${PROF} ${MPIEXEC} ${NRNIV} ${NRNOPT} ${HOC_NAME}

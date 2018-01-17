@@ -1,0 +1,46 @@
+\paragraph{京でのジョブの実行}~\\
+\begin{table}[htb]
+  \caption {京でのジョブ関連コマンド}
+  \begin{center}
+    \begin{tabular}{|c|p{12cm}|}
+      \hline
+      コマンド & 説明 \\ \hline
+      pjsub & pjsub \"サブミットするスクリプトのパス\"とすることでジョブをキューシステムに登録し,ジョブIDを出力する.\\ \hline
+      pjdel & pjdel \"ジョブID\"とすることで現在実行中または待機中のジョブを停止・削除する.\\ \hline
+      pjstat & 現在実行または待機中のジョブの一覧を表示する\\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+{\footnotesize
+\lstinputlisting[caption=京のジョブスクリプト例, label=k-job-script,frame=single]{src/job/k-job}
+}
+
+{\footnotesize
+\begin{lstlisting}[caption=京でのコマンド実行例,label=k-job-example,numbers=none]
+$ pjsub job.sh
+[INFO] PJM 0000 pjsub Job 7129316 submitted.
+
+$ pjstat
+ACCEPT QUEUED  STGIN  READY RUNNING RUNOUT STGOUT   HOLD  ERROR   TOTAL
+     0      1      0      0       0      0      0      0      0       1
+s      0      1      0      0       0      0      0      0      0       1
+
+JOB_ID   JOB_NAME  MD  ST   USER      GROUP      START_DATE       ELAPSE_TIM  NODE_REQUIRE    RSC_GRP  SHORT_RES
+7129316  job.sh    NM  QUE  user    group  [--/-- --:--:--]  0000:00:00      1:-         small    -
+\end{lstlisting}
+}
+
+\begin{table}[htb]
+  \caption {京でのジョブの状態}
+  \begin{center}
+    \begin{tabular}{|c|p{12cm}|}
+      \hline
+      ジョブのステータス & 説明 \\ \hline
+      QUE & ジョブキューで待機中.\\ \hline
+      STI & ジョブの実行に必要なファイルをステージインしている.\\ \hline
+      RUN & ジョブを実行中.\\ \hline
+      STO & ジョブの実行結果をステージアウトしている.\\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}

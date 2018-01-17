@@ -1,0 +1,46 @@
+\paragraph{クラスタでのジョブの実行}~\\
+\begin{table}[htb]
+  \caption {クラスタでのジョブ関連コマンド}
+  \begin{center}
+    \begin{tabular}{|c|p{12cm}|}
+      \hline
+      コマンド & 説明 \\ \hline
+      qsub & qsub \"サブミットするスクリプトのパス\"とすることでジョブをキューシステムに登録し,ジョブIDを出力する.\\ \hline
+      qdel & pjdel \"ジョブID\"とすることで現在実行中または待機中のジョブを停止・削除する.\\ \hline
+      qstat & 現在実行または待機中のジョブの一覧を表示する\\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+{\footnotesize
+\lstinputlisting[caption=クラスタのジョブスクリプト例, label=cluster-job-script,frame=single]{src/job/cluster-job}
+}
+
+{\footnotesize
+\begin{lstlisting}[caption=クラスタでのコマンド実行例,label=cluster-job-example,numbers=none]
+$ qsub job.sh
+20252.cluster.localdomain
+
+$ qstat
+>> qstat
+Every 1.0s: qstat                                                                                                                                            Wed Jan 10 01:06:06 2018
+
+Job ID                    Name             User            Time Use S Queue
+------------------------- ---------------- --------------- -------- - -----
+20251.cluster              job.sh        inoue           00:05:38 C cluster
+20252.cluster              job.sh        inoue                  0 R cluster
+\end{lstlisting}
+}
+
+\begin{table}[htb]
+  \caption {クラスタでのジョブの状態}
+  \begin{center}
+    \begin{tabular}{|c|p{12cm}|}
+      \hline
+      ジョブのステータス & 説明 \\ \hline
+      Q & ジョブキューで待機中.\\ \hline
+      R & ジョブを実行してる.\\ \hline
+      C & ジョブが完了した.\\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}

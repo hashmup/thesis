@@ -20,7 +20,7 @@
 
 %% 使いたいパッケージを指定
 \usepackage[dvipdfmx]{graphicx, color} % 画像挿入
-\usepackage{styles/mediabb} % PDFなどのbounding boxを取得してくれる
+\usepackage{mediabb} % PDFなどのbounding boxを取得してくれる
 \usepackage{amsmath} % 数式用パッケージ
 \usepackage{url} % URL挿入用
 \usepackage{color} % 文字色指定
@@ -30,6 +30,7 @@
 
 % コード読み込みのための設定
 \lstset{%
+  tabsize=8,
   language={Python},
   basicstyle={\small},%
   identifierstyle={\small},%
@@ -73,8 +74,12 @@
 
 % \input{abstract/abstract}
 \input{introduction/introduction}
+\input{model-env/model-env}
 \input{method/method}
 \input{experiment/experiment}
 \input{conclusion/conclusion}
 \input{appendix/appendix}
+\medskip
+\bibliographystyle{junsrt}
+\bibliography{citation/library}
 \end{document}
