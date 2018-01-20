@@ -8,15 +8,20 @@ Pyenvを利用して汎用的な環境を作成することにした.\\
 ・Makefile\\
 このプロジェクトのMakefile（ TODO: reference）.\\
 主に利用するのは以下の３つのコマンド\\
-\indent ・make install\\
-\indent \indent このコマンドでは以下に示すscripts/setup\_env\_and\_install\_libraries.shを実行する.\\
-\indent ・make pull\\
-\indent \indent このコマンドでは以下に示すscripts/pull\_required\_projects.shを実行する.\\
-\indent ・make setup\\
-\indent \indent 上記の二つのコマンドをinstall,pullの順で実行する.\\
+{\footnotesize
+\begin{lstlisting}[numbers=none]
+# scripts/setup_env_and_install_libraries.shを実行する
+make install
+
+# scripts/pull_required_projects.shを実行する
+make pull
+
+# make install, make pullの順で実行する
+make setup
+\end{lstlisting}
+}
 ・scripts/\\
 Makefileで実際に実行されるシェルスクリプト群であり,NEURON本体のインストールと本研究で用いるPythonの環境を整える役割を担っている.\\
-\indent ・setup\_env\_and\_install\_libraries.sh\\
 以下に示したように,Pyenvを用いてPython3 ( TODO: reference)のインストールと実行の際に必要となるライブラリをインストールしている.\\
 ( TODO: ライブラリの説明)
 \indent {\footnotesize

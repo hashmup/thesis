@@ -6,14 +6,12 @@
 その二つに加え配列構造の順序を入れ替えることによってキャッシュヒット率の向上に取り組んだ.\\
 Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記述されている.\\
 {\footnotesize
-\lstinputlisting[caption=aaa,label=hogehoge,frame=single]{src/mod/hh.mod}
+\lstinputlisting[caption=hh.mod,label=mod-hh,frame=single]{src/mod/hh.mod}
 }
 先行研究の中でも示されている通り,この中でプロファイル結果から多くの計算時間を必要とするのはDERIVATIVE ( TODO: reference)
 であり以下のパラメータの多くはDERIVATIVEの計算を行う上でキャッシュヒット率をあげることを目的としている.\\
-\subsubsection{SIMD化}
 \input{method/algorithm/simd}
 ・変数の配列化によるメモリアクセスの連続化
-\subsubsection{配列構造}
 \input{method/algorithm/structure-of-array}
 ・配列の構造変形（時間があれば）なければここを消す
 \subsection{実行マシンに依存するパラメータ}

@@ -1,36 +1,56 @@
-# Global variables
+# グローバル変数
+# ジョブの最大同時実行数を指定
 MAX_NUM_JOB = 4
+# 実行中のジョブIDを保存する配列
+# ジョブが完了したか否かの判定で利用する
 running_job = []
 
 main():
+  # ジョブの監視を行う関数であるwatch_job()を別スレッドで立ち上げる
   watch_job()
 
+  # モデルに関連するパラメータ, コンパイルに関連するパラメータ
+  # そして実行マシンに関連するパラメータについて3重のループを組み,
+  # 外のループで実行形式を作成し, 最内のループでジョブスクリプトを生成し
+  # キューイングシステムにサブミットする
   while model_param_candidates.has_next()
     model_param = model_param_candidates.next()
     while compile_param_candidates.has_next()
       compile_param = compile_param_candidates.next()
-
+      # モデルとコンパイルに関するパラメータを用いて,NEURONの実行形式を
+      # 作成する
       build(model_param, compile_param)
 
       while machine_param_candidates.has_next()
         machine_param = machine_param_candidates.next()
-
+        # 実行マシンに関するパラメータを用いて,ジョブスクリプトを作成し,
+        # キューイングシステムにサブミットする
         job_id = run(machine_param)
+        # キューイングシステムから返されるジョブIDを登録する
         running_job.add(job_id)
-
+      # 実行マシンに関するパラメータの順番を最初に戻す
       machine_param.reset()
+    # コンパイルに関するパラメータの順番を最初に戻す
     compile_param.reset()
 
 run(machine_param):
+  # ジョブを一度に大量に投げることを避けるため,現在実行中のジョブの数が
+  # 指定した最大同時実行数以上である時は10秒間のスリープを繰り返す
   while running_job's size >= MAX_NUM_JOB:
     sleep 10
+  # 実行マシンに関わるパラメータを用いてジョブスクリプトを作成する
   job = make_job(machine_param)
-  job_id = deploy(job)
+  # キューイングシステムにジョブスクリプトをサブミットする
+  job_id = submit(job)
+  # キューイングシステムから返されるジョブIDを返す
   return job_id
 
 watch_job():
+  # 初期状態で実行中のジョブがない場合,ジョブがサブミットされるまで待つ
   while running_job's size == 0:
     sleep 10
+  # 実行中のジョブIDそれぞれが完了しているかをチェックし,完了している場合
+  # ジョブの結果を集約し, 実行中のジョブの一覧から取り除く
   for job_id in running_job:
     if is_finished(job_id):
       summarize(job_id)

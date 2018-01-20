@@ -1,10 +1,35 @@
-#!/bin/sh
-#----- ノードの数, ノード内のプロセス数を指定 -----#
-#PBS -l nodes=1:ppn=4
-#PBS -q cluster
-export OMP_NUM_THREADS=2
-NRNIV="../specials/x86_64/special -mpi"
-HOC_NAME="../hoc/bench_main.hoc"
+#!/bin/bash -x
+#----- ノードの数を指定 -----#
+#PJM --rsc-list "node=8"
+#----- プログラムの実行時間を指定 -----#
+#PJM --rsc-list "elapse=00:10:00"
+#----- 利用するリソースグループを指定 -----#
+#PJM --rsc-list "rscgrp=small"
+#----- ノード内のプロセス数を指定 -----#
+#PJM --mpi "proc=64"
+#PJM -s
+#----- ステージングの条件を設定 -----#
+#PJM --stg-transfiles all
+#PJM --mpi "use-rankdir"
+#----- ステージインする際の基本となるディレクトリを指定 -----#
+#PJM --stgin-basedir /home/user/neuron_kplus
+#----- ステージアウトsる先のディレクトリを設定 -----#
+#--PJM --stgout "rank=* %r:./prof/* /data/user/log/"
+#----- ステージインするファイル群をランクごとに指定 -----#
+#PJM --stgin "rank=* ./stgin/* %r:./"
+#PJM --stgin "rank=* ./specials/sparc64/special %r:./"
+#PJM --stgin "rank=* ./hoc/* %r:./"
+#----- 環境変数の設定 -----#
+. /work/system/Env_base
+
+#----- OpenMPのスレッド数を指定 -----#
+export OMP_NUM_THREADS=1
+#----- 利用するNEURONの実行形式のパスとオプションを指定する -----#
+NRNIV="./special -mpi"
+
+#----- シミュレーションファイルを指定する -----#
+HOC_NAME="./bench_main.hoc"
+#----- シミュレーションに与えるオプション -----#
 NRNOPT=\
 " -c MODEL=2"\
 " -c NSTIM_POS=1"\
@@ -13,15 +38,22 @@ NRNOPT=\
 " -c NSYNAPSE=10"\
 " -c SYNAPSE_RANGE=1"\
 " -c NETWORK=1"\
-" -c STOPTIME=50"\
-" -c NTHREAD=16"\
+" -c STOPTIME=200"\
+" -c NTHREAD=1"\
 " -c MULTISPLIT=0"\
 " -c SPIKE_COMPRESS=0"\
 " -c CACHE_EFFICIENT=1"\
 " -c SHOW_SPIKE=1"
+
+#----- プログラムを実行する際にNEURONに渡すオプション -----#
 LPG="lpgparm -t 4MB -s 4MB -d 4MB -h 4MB -p 4MB"
+#----- プログラムを実行する際にNEURONに渡すオプション -----#
 MPIEXEC="mpiexec -mca mpi_print_stats 1"
+#----- プロファイラを指定（gprofなど） -----#
 PROF=""
-cd $PBS_O_WORKDIR
-echo "${PROF} ${MPIEXEC} ${NRNIV} ${NRNOPT} ${HOC_NAME}"
-time ${PROF} ${MPIEXEC} ${NRNIV} ${NRNOPT} ${HOC_NAME}
+#----- プログラム実行時のコマンドを出力 -----#
+echo "${PROF} ${MPIEXEC} ${LPG} ${NRNIV} ${NRNOPT} ${HOC_NAME}"
+#----- プログラムを実行 -----#
+time ${PROF} ${MPIEXEC} ${LPG} ${NRNIV} ${NRNOPT} ${HOC_NAME}
+
+sync

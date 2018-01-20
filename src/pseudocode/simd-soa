@@ -1,0 +1,43 @@
+optimize_array(array_list, statements) {
+  union_find uf
+  related_array_list = []
+  for statement in statements {
+    tokens = parse_statement(statement)
+    for token in tokens {
+      uf.union(tokens[0], token)
+    }
+  }
+  for array_name in array_list {
+    root = uf.find(array_name)
+    related_array_list[root].append(array_name)
+  }
+  foreach array_list from related_array_list use it or not {
+    print_array_definition(modified_related_array_list)
+  }
+}
+
+print_array_definition(related_array_list) {
+  code = ""
+  cnt = 0
+  for array_list in related_array_list {
+    # 配列構造を定義する
+    # 関連する配列の数が一つ以上であればくくり出しを行う
+    if array_list.size() > 1 {
+      code += "static double opt_table{0}[SIZE][{1}];\n".format(cnt, array_list.size())
+    } else {
+      code += "static double opt_table{0}[SIZE];\n".format(cnt)
+    }
+    # 配列のくくり出しを行っている場合でも画一的にアクセスできるようにマクロを定義する
+    array_cnt = 0
+    for array_name in array_list {
+      if array_list.size() > 1 {
+        code += "#define table_{0}(x) opt_table{1}[(x)][{2}]\n"\
+                .format(array_name, cnt, array_cnt)
+        array_cnt += 1
+      } else {
+        code += "#define table_{0}(x) opt_table{1}[(x)]\n".format(array_name, cnt)
+      }
+    }
+  }
+  print(code)
+}

@@ -28,8 +28,7 @@ NEURON本体がリンクされることによってNEURONの実行形式が作�
 
 \subsubsection{NEURONのコンパイル}
 \paragraph{クラスタ上でのコンパイル}~\\
-（ TODO: 宮本さんのから引用）
-一般のx86環境では,
+クラスタのようなx86の大規模計算機では,
 {\footnotesize
 \begin{lstlisting}[caption=クラスタでのNEURONのコンパイル,label=cluster-neuron-compile,numbers=none]
 $ ./configure --prefix=`pwd`\
@@ -38,21 +37,20 @@ $ make
 $ make install
 \end{lstlisting}
 }
-とすることでNEURONをコンパイルし,実行形式を得ることができる.
-また,NEURONはデフォルトではGUI関係のライブラリもリンクするが,クラスタ上では必要ないためオプションを渡すことで
+とすることで計算シミュレータとしてのNEURONをコンパイルし,実行形式を得ることができる.
+デフォルトのコンパイルオプションではNEURONはGUI関係のライブラリもリンクするが,大規模計算機環境上では必要ないためオプションを渡すことで
 コンパイル対象から除外している.\\
 \paragraph{京上でのコンパイル}~\\
-（ TODO: 宮本さんのから引用）
 一方で,京ではログインノードと呼ばれるNEURONのコンパイルを行う環境（x86）とプログラムを実行する環境（sparc64）が
 異なるため,クロスコンパイルを行う必要がある.\\
-NEURONのコンパイルは内部的には
-1. MODコンパイラ（nmodl）をコンパイルし実行形式を生成
-2. MODコンパイラがMODファイルをC言語ファイルに変換した上でコンパイル
-3. NEURON本体（nrniv, nrnoc）をコンパイルする
-4. 上述の2と3をリンクさせ,実行形式を作成
-という手順を踏んでいるが,この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため,1については
+NEURONのコンパイルは内部的には\\
+1. MODコンパイラ（nmodl）をコンパイルし実行形式を生成\\
+2. MODコンパイラがMODファイルをC言語ファイルに変換した上でコンパイル\\
+3. NEURON本体（nrniv, nrnoc）をコンパイルする\\
+4. 上述の2と3をリンクさせ,実行形式を作成\\
+という手順を踏んでいるが,この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため,1について
 ネイティブコンパイルで,2,3,4についてはクロスコンパイルで行う必要がある.\\
-またGUI関係のライブラリについてはクラスタ同様京でも必要ないため,除外する\\
+またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する（宮本　修論より引用）\\
 \subparagraph{nmodlのコンパイル}~\\
 {\footnotesize
 \begin{lstlisting}[caption=京でのnmodlのコンパイル,label=k-nmodl-compile,numbers=none]
@@ -64,7 +62,7 @@ $ make
 $ make install
 \end{lstlisting}
 }
-\subparagraph{NEURONのクロスコンパイル}
+\subparagraph{NEURONのクロスコンパイル}~\\
 NEURON本体をクロスコンパイルする前に, 上述したnmodlのコンパイルで生成した実行形式をPATHの通っているディレクトリに
 移動させておく必要がある. nmodlを退避させたのち,下記のコマンドを実行することでNEURON本体の実行形式が生成される
 {\footnotesize
