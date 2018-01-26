@@ -1,1 +1,18 @@
 \subsubsection{ベンチマークモデル}
+本研究では最適化を行った神経回路シミュレーションのベンチーマークを取るため,
+宮本らの先行研究\cite{miyamoto-master}において作成されたベンチマークモデルのシミュレーションコードを利用した.\\
+シミュレーションコードでは,
+\begin{enumerate}
+\item リングネットワーク
+\item ランダムネットワーク
+\item Watts and Strogatzネットワーク
+\end{enumerate}
+の3種類神経回路ネットワークを以下のパラメータ・関数を用いて構築している.\\
+
+\begin{enumerate}
+\item NCELL : 細胞数
+\item NSYNAPSE : 細胞1つあたりのシナプス数
+\item RND : 1以上かつ細胞数より少ない整数の乱数
+\item makeSynapse(X, Y) : シナプス前末端を細胞X, シナプス後末端を細胞Yに作成し接続する
+\end{enumerate}
+また, 細胞内でのシナプスの位置はランダムとしてシミュレーションを行う.\\

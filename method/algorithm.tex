@@ -11,18 +11,17 @@ Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記�
 先行研究の中でも示されている通り,この中でプロファイル結果から多くの計算時間を必要とするのはDERIVATIVE ( TODO: reference)
 であり以下のパラメータの多くはDERIVATIVEの計算を行う上でキャッシュヒット率をあげることを目的としている.\\
 \input{method/algorithm/simd}
-・変数の配列化によるメモリアクセスの連続化
+
 \input{method/algorithm/structure-of-array}
-・配列の構造変形（時間があれば）なければここを消す
+
 \subsection{実行マシンに依存するパラメータ}
 近年のCPUはシングルコアではなく,マルチコアによって計算を並列化することで全体としての計算能力を向上させている.\\
-一方で,この並列化を行う上でのパラメータは実行するマシンごとに依存するものである.\\
-ここで主に対象としたパラメータはOpenMPのスレッド数とMPIのプロセス数である.\\
-\subsubsection{スレッド数}
-OpenMPのスレッドに関与するパラメータに関する説明 ( TODO : わあああ)
-\subsubsection{プロセス数}
-MPIプロセスに関与するパラメータに関する説明 ( TODO : わあああい)
-\subsubsection{配列サイズの変形}
+この並列化を行う上で, 本研究では主にOpenMPとMPIを用いたハイブリッド並列に取り組んだ. またハイブリッド並列を行う上で,
+OpenMPのスレッド数, MPIのプロセス数そして各スレッドに割り振られるバッファサイズをパラメータとして用いた.\\
+
+% ハイブリッド並列について
+\input{method/algorithm/hybrid}
+
 \input{method/algorithm/size-of-array}
-\subsection{コンパイルに関わるパラメータ}
-TODO: 時間があれば記述する
+
+\input{method/algorithm/compile}

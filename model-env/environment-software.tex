@@ -17,12 +17,13 @@ NEURON本体がリンクされることによってNEURONの実行形式が作�
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
-    \includegraphics[width=10.0cm, angle=-90]{./images/neuron}
+    \includegraphics[width=0.9\textwidth, angle=-90]{./images/neuron}
     \caption{NEURONの全体構成}
     \label{fig:neuron}
   \end{center}
-\end{figure}~\\
-宮本らによる先行研究では,主にこのMODファイルからCファイルへの変換に着目し,nrnivmodlによって作成されたCファイルを手動にて
+\end{figure}
+\clearpage
+宮本らによる先行研究\cite{miyamoto-master}では,主にこのMODファイルからCファイルへの変換に着目し,nrnivmodlによって作成されたCファイルを手動にて
 最適化することでシミュレーション全体の高速化を達成した.\\
 そのため,本研究においてはnrnivmodlに変わるトランスパイラを作成し自動での高速化を図る.\\
 
@@ -43,11 +44,13 @@ $ make install
 \paragraph{京上でのコンパイル}~\\
 一方で,京ではログインノードと呼ばれるNEURONのコンパイルを行う環境（x86）とプログラムを実行する環境（sparc64）が
 異なるため,クロスコンパイルを行う必要がある.\\
-NEURONのコンパイルは内部的には\\
-1. MODコンパイラ（nmodl）をコンパイルし実行形式を生成\\
-2. MODコンパイラがMODファイルをC言語ファイルに変換した上でコンパイル\\
-3. NEURON本体（nrniv, nrnoc）をコンパイルする\\
-4. 上述の2と3をリンクさせ,実行形式を作成\\
+NEURONのコンパイルは内部的には,
+\begin{enumerate}
+\item MODコンパイラ（nmodl）をコンパイルし実行形式を生成
+\item MODコンパイラがMODファイルをC言語ファイルに変換した上でコンパイル
+\item NEURON本体（nrniv, nrnoc）をコンパイルする
+\item 上述の2と3をリンクさせ,実行形式を作成
+\end{enumerate}
 という手順を踏んでいるが,この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため,1について
 ネイティブコンパイルで,2,3,4についてはクロスコンパイルで行う必要がある.\\
 またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する（宮本　修論より引用）\\
@@ -80,6 +83,3 @@ $ make
 $ make install
 \end{lstlisting}
 }
-
-\subsubsection{NMODLについて}
-本研究ではMODファイルを変換する

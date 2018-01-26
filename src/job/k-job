@@ -13,7 +13,7 @@
 #PJM --mpi "use-rankdir"
 #----- ステージインする際の基本となるディレクトリを指定 -----#
 #PJM --stgin-basedir /home/user/neuron_kplus
-#----- ステージアウトsる先のディレクトリを設定 -----#
+#----- ステージアウトする先のディレクトリを設定 -----#
 #--PJM --stgout "rank=* %r:./prof/* /data/user/log/"
 #----- ステージインするファイル群をランクごとに指定 -----#
 #PJM --stgin "rank=* ./stgin/* %r:./"
@@ -22,9 +22,9 @@
 #----- 環境変数の設定 -----#
 . /work/system/Env_base
 
-#----- OpenMPのスレッド数を指定 -----#
+#----- OpenMP のスレッド数を指定 -----#
 export OMP_NUM_THREADS=1
-#----- 利用するNEURONの実行形式のパスとオプションを指定する -----#
+#----- 利用する NEURON の実行形式のパスとオプションを指定する -----#
 NRNIV="./special -mpi"
 
 #----- シミュレーションファイルを指定する -----#
@@ -45,11 +45,11 @@ NRNOPT=\
 " -c CACHE_EFFICIENT=1"\
 " -c SHOW_SPIKE=1"
 
-#----- プログラムを実行する際にNEURONに渡すオプション -----#
+#----- プログラムを実行する際に NEURON に渡すオプション -----#
 LPG="lpgparm -t 4MB -s 4MB -d 4MB -h 4MB -p 4MB"
-#----- プログラムを実行する際にNEURONに渡すオプション -----#
+#----- プログラムを実行する際に NEURON に渡すオプション -----#
 MPIEXEC="mpiexec -mca mpi_print_stats 1"
-#----- プロファイラを指定（gprofなど） -----#
+#----- プロファイラを指定（ gprof など） -----#
 PROF=""
 #----- プログラム実行時のコマンドを出力 -----#
 echo "${PROF} ${MPIEXEC} ${LPG} ${NRNIV} ${NRNOPT} ${HOC_NAME}"

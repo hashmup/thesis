@@ -14,7 +14,7 @@ NEURON {
   NONSPECIFIC_CURRENT il
   RANGE gnabar, gkbar, gl, el, gna, gk
   GLOBAL minf, hinf, ninf, mtau, htau, ntau
-	THREADSAFE : assigned GLOBALs will be per thread
+  THREADSAFE : assigned GLOBALs will be per thread
 }
 
 PARAMETER {
