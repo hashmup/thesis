@@ -56,9 +56,38 @@
 \newcommand{\Hoge}[2]{\textcolor{#1}{#2#2}}      % 引数あり
 \newcommand{\HOGE}[2][red]{\textcolor{#1}{#2#2}} % 引数あり（オプション引数付き）
 
-\title{ 自動チューニング化手法 }
-\author{井上裕太}
+\makeatletter
+
+\def\@thesis{卒業論文}
+\def\@professor{神崎亮平}
+\def\id#1{\def\@id{#1}}
+\def\department#1{\def\@department{#1}}
+
+\def\@maketitle{
+\begin{center}
+{\huge \@thesis \par} %修士論文と記載される部分
+\vspace{10mm}
+{\LARGE\bf \@title \par}% 論文のタイトル部分
+\vspace{10mm}
+{\Large \@date 提出\par}	% 提出年月日部分
+\vspace{20mm}
+{\Large 指導教員 \@professor 教授\par} % 指導教員
+\vspace{20mm}
+{\Large \@department \par}	% 所属部分
+% {\Large 学籍番号　\@id \par}	% 学籍番号部分
+\vspace{10mm}
+{\large \@id \@author}% 氏名
+\end{center}
+\par\vskip 1.5em
+}
+
+\makeatother
+
+\title{\underline{神経回路シミュレーションにおける}\\\underline{イオンチャンネルダイナミクス計算の}\\\underline{最適化コードの自動生成}}
 \date{\today}
+\department{東京大学工学部機械情報工学科}
+\id{03-150268}
+\author{井上裕太}
 
 %% --- 以下本文 ---
 \begin{document}
