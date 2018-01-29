@@ -13,7 +13,23 @@ C言語のテンプレートに埋め込むことで対応するC言語のファ
 （ TODO: もう少し説明をたす）
 
 \subsubsection{textX}
+MODファイルから抽象木を構築するために, Domain Specific Language（以下DSL）作成用のPythonライブラリであるtextX\cite{textX}を用いた.
+DSLとは, C言語等に代表される汎用言語ではなく, 微分方程式の記述を行うMODファイルのように応用先が特定の領域に限られる言語である.\\
+一般的に言語を作成しようとした時, Lexer, ParserそしてCode generationという3つの機能を実装する必要がある.
+しかしながら, 言語のメタモデルを作成することでtextXは内部的にLexerとParserの役割を果たすため,
+メタモデルを記述したファイル（.txという拡張子を用いる）と, メタモデルから生成された抽象木からコードを生成するプログラムを実装することでDSLに対するコンパイラを作成することができる.\\
+また, MODファイルのメタモデルは前述したpynmodlというプロジェクトで作成されたものを用いた.\\
+図\ref{fig:hh-mod-ast}はHodgkin-HuxleyのMODファイルの抽象木を表しており, 以下textXから得られた抽象木からC言語のプログラムを生成する方法について述べる.\\
 
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+  \begin{center}
+    \includegraphics[width=10.0cm, angle=-90]{./images/hh-mod.pdf}
+    \caption{Hodgkin-HuxleyのMODファイルの抽象木}
+    \label{fig:hh-mod-ast}
+  \end{center}
+\end{figure}~\\
+\clearpage
 
 \subsubsection{構成}
 ( TODO: 章番号)のアルゴリズムで触れた中で,トランスパイラ内で実装を行ったのはモデルに依存するパラメータであり,
