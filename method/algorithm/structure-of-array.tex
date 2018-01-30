@@ -2,7 +2,7 @@
 配列を複数定義し,一つの計算の中で呼び出す場合空間的局所性が低くなり,キャッシュミスを多く生じさせる可能性がある.
 そのため,同時に利用する配列達を一つの配列としてくくりだすことで空間的局所性を高くし,高速化を図る手法が考えられる.\\
 {\footnotesize
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none,frame=single]
 int a[100], b[100], c[100], d[100];
 for i=0 to 100 {
   d[i] = a[i] + b[i] + c[i];
@@ -11,7 +11,7 @@ for i=0 to 100 {
 }
 というプログラムを例とすると,
 {\footnotesize
-\begin{lstlisting}[numbers=none]
+\begin{lstlisting}[numbers=none,frame=single]
 int abcd[100][4];
 for i=0 to 100 {
   abcd[i][3] = abcd[i][0] + abcd[i][1] + abcd[i][2];
@@ -25,7 +25,7 @@ SIMD命令を使いにくくなる可能性が非常に高い.\\
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
-    \includegraphics[width=1.1\textwidth]{./images/MERGE-ARRAY.pdf}
+    \includegraphics[width=10cm]{./images/MERGE-ARRAY.pdf}
     \caption{配列のくくりだし}
     \label{fig:merge-array}
   \end{center}

@@ -5,8 +5,10 @@
     \begin{tabular}{|c|p{12cm}|}
       \hline
       コマンド & 説明 \\ \hline
-      qsub & qsub \"サブミットするスクリプトのパス\"とすることでジョブをキューシステムに登録し,ジョブIDを出力する.\\ \hline
-      qdel & pjdel \"ジョブID\"とすることで現在実行中または待機中のジョブを停止・削除する.\\ \hline
+      qsub & qsub サブミットするスクリプトのパス\\
+           & とすることでジョブをキューシステムに登録し,ジョブIDを出力する.\\ \hline
+      qdel & pjdel ジョブID\\
+           & とすることで現在実行中または待機中のジョブを停止・削除する.\\ \hline
       qstat & 現在実行または待機中のジョブの一覧を表示する\\ \hline
     \end{tabular}
   \end{center}
@@ -32,7 +34,7 @@ Job ID                    Name             User            Time Use S Queue
 20252.cluster              job.sh        inoue                  0 R cluster
 \end{lstlisting}
 }
-
+\clearpage
 \begin{table}[htb]
   \caption {クラスタでのジョブの状態}
   \begin{center}

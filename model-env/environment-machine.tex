@@ -2,7 +2,7 @@
 \subsubsection{計算機性能}
 本研究で使用した計算機は,スーパーコンピュータ「京」（以下京, 図\ref{fig:k}）と
 研究室クラスタ（以下クラスタ, TODO: 図）である. (TODO: 京についての説明)\\
-京とクラスタの性能諸元と表 ( TODO: 表番号)に記す\cite{riken-system}.\\
+京の性能諸元\cite{riken-system}を表\ref{table:k}, \ref{table:k-processor}に, クラスタの性能諸元\cite{riken-system}を表\ref{table:cluster}に記す.\\
 
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
@@ -21,8 +21,9 @@
       計算ノード間ネットワーク & 6次元メッシュ/トーラス（ユーザービューは3次元トーラス）\\ \hline
       帯域 & 3次元の正負各方向にそれぞれ5GB/s×2（双方向）\\ \hline
     \end{tabular}
+    \caption{京計算ノード構成}
+    \label{table:k}
   \end{center}
-  \caption{京計算ノード構成}
 \end{table}~\\
 \begin{table}[t]
   \begin{center}
@@ -39,22 +40,25 @@
       トランジスタ数 & 約7億6000万個 \\ \hline
       消費電力 & 58W（プロセス条件TYP）\\ \hline
     \end{tabular}
+    \caption{京プロセッサ構成}
+    \label{table:k-processor}
   \end{center}
-  \caption{京プロセッサ構成}
 \end{table}~\\
 \begin{table}[htb]
   \begin{center}
     \begin{tabular}{|c|p{12cm}|}
     \end{tabular}
+    \caption{クラスタ性能}
+    \label{table:cluster}
   \end{center}
-  \caption{クラスタ性能}
 \end{table}~\\
 \subsubsection{ジョブ実行環境}
+\label{subsec:job-env}
 京に代表される大型コンピュータの場合,複数の利用者が共同で利用することが基本となる. そのため各個人が
 各々勝手にプログラムを実行すると,計算が集中することで処理限界を大幅に超えてしまったり,逆に全く利用されない時間
 などが現れてしまい計算資源を有効に活用できない. そのため,大型コンピュータではキューイングシステムを利用してプログラムが実行される.\\
 キューイングシステムにおける一度のプログラム実行の単位はジョブと呼ばれ,プログラムを実行する際に必要なノード数,メモリ,実行するプログラムのパスや前処理
-といった情報を書き込んだジョブスクリプトを作成し,キューイングシステムにジョブスクリプトをサブミットすることでプログラムが実行される.~\\
+といった情報を書き込んだジョブスクリプトを作成し,キューイングシステムにジョブスクリプトをサブミットすることでプログラムが実行される.\\
 % kの説明
 \input{model-env/environment/k}
 % clusterの説明

@@ -2,9 +2,9 @@
 #----- ノードの数, ノード内のプロセス数を指定 -----#
 #PBS -l nodes=1:ppn=4
 #PBS -q cluster
-#----- OpenMPのスレッド数を指定する -----#
+#----- OpenMP のスレッド数を指定する -----#
 export OMP_NUM_THREADS=2
-#----- 利用するNEURONの実行形式のパスとオプションを指定する -----#
+#----- 利用する NEURON の実行形式のパスとオプションを指定する -----#
 NRNIV="../specials/x86_64/special -mpi"
 #----- シミュレーションファイルを指定する -----#
 HOC_NAME="../hoc/bench_main.hoc"
@@ -25,7 +25,7 @@ NRNOPT=\
 " -c SHOW_SPIKE=1"
 #----- シミュレーションに与えるオプション -----#
 MPIEXEC="mpiexec -mca mpi_print_stats 1"
-#----- プロファイラを指定する（gprofなど） -----#
+#----- プロファイラを指定する（ gprof など） -----#
 PROF=""
 #----- プログラム実行の際のカレントディレクトリ -----#
 cd $PBS_O_WORKDIR

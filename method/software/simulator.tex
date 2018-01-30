@@ -151,11 +151,11 @@ OpenMPのスレッド数を例にすると定義方法は3種類あり, それ�
 }
 \subsubsection{MODファイルをパースし抽象木を生成する}
 \label{sec:simulator-mod-parse}
-MODファイルのパースし抽象木を生成するにあたり, PythonのライブラリであるtextX（ TODO: refrence）を利用した.\\
+MODファイルのパースし抽象木を生成するにあたり, PythonのライブラリであるtextX\cite{textX-repo}を利用した.\\
 textXはパーサーとメタモデルを定義することで, 独自のDomain Specific Languagesを作成することができるという
 Pythonのライブラリである.
 その中でメタモデルについては, NEURONのMODファイルからNeuroMLという別の神経回路シミュレーションソフトの形式に変換する
-ためのライブラリであるpynmodl( TODO: pynmodlのレファレンス)において作成されていたため, pynmodlのメタモデルを利用した.\\
+ためのライブラリであるpynmodl\cite{pynmodl-repo}において作成されていたため, pynmodlのメタモデルを利用した.\\
 当初pynmodlを利用し, NeuroMLというXML形式の情報を利用し実装を行う予定だったが,
 pynmodlはNeuroMLを開発しているチームの中で本論文を執筆時において開発中のライブラリであり
 MODファイルから抽象木を取り出すためのメタモデルのみ実装されている段階であったため,
@@ -270,7 +270,7 @@ deploy_job() {
       current_code_optimize_param = code_optimize_param
 
       # パラメータを元に実効形式, ジョブスクリプトを生成しジョブをサブミットする
-      # 返り値はjobIDとなる
+      # 返り値は jobID となる
       job_id = deploy(shouldBuild,
                       compile_param,
                       code_optimize_param,
@@ -279,13 +279,13 @@ deploy_job() {
       # job_id を完了判定のためのテーブルに初期状態として記録する
       running_jobs[job_id] = 0
 
-      # 今回のシミュレーションで利用したパラメータとjobIDを結果を保持するテーブルに保存するためまとめる
+      # 今回のシミュレーションで利用したパラメータと jobID を結果を保持するテーブルに保存するためまとめる
       merge_params = compile_param +
                      code_optimize_param +
                      job_param +
                      {"job_id": job_id, "time": 0}
       # パラメータと実行結果を保存するテーブルにパラメータを追加
-      # ジョブが完了した段階でjobIDを元にtimeを更新する
+      # ジョブが完了した段階で jobID を元に time を更新する
       result_table.add(merge_params)
 }
 
@@ -413,13 +413,13 @@ watch_job() {
     for job_id in running_jobs {
         # ジョブが完了している場合, ジョブ結果の集約を行う
         if not is_job_still_running(job_id) {
-            # jobIDに紐付いたジョブ結果の集約（実行にかかった時間の取得）
+            # jobID に紐付いたジョブ結果の集約（実行にかかった時間の取得）
             time = summary(job_id)
 
-            # 結果を保持するテーブルのjobIDに紐付いた実行時間を更新する
+            # 結果を保持するテーブルの jobID に紐付いた実行時間を更新する
             result_table['job_id' == job_id]['time'] = time
 
-            # 現在実行中のジョブからjobIDを削除する
+            # 現在実行中のジョブから jobID を削除する
             running_jobs.remove(job_id)
             current_job_num -= 1
         }
@@ -434,7 +434,7 @@ watch_job() {
         } else {
             print("Some results are different.")
         }
-        # 実効結果とパラメータを保持したテーブルをCSV形式で保存する
+        # 実効結果とパラメータを保持したテーブルを CSV 形式で保存する
         result_table.to_csv("result.csv")
         return
     }
@@ -446,7 +446,7 @@ watch_job() {
 
 \paragraph{ジョブの完了判定}~\\
 ジョブの完了判定を行う際には, キューイングシステムの上でのジョブの実行状況を取得するpjstatとqstatの出力結果を利用する.\\
-これらの出力結果が常に一定のフォーマットに従うことは（ TODO: 章番号のレファレンス）で示したが, 一定の出力を持つため正規表現を用いることでジョブIDとその実行状況を取得可能である.\\
+これらの出力結果が常に一定のフォーマットに従うことは\ref{subsec:job-env}で示したが, 一定の出力を持つため正規表現を用いることでジョブIDとその実行状況を取得可能である.\\
 ここで注意することは, ジョブの監視スレッドの実行が一定間隔であり,
 必ずしもqstatやpjstat実行時にCやSTOといったジョブが完了した状態であるという出力が得られるとは限らないことである.\\
 一方で, ジョブがキューイングシステム内で待機状態や実行状態である時間はジョブの監視スレッドの実行間隔より十分に大きいため,
@@ -456,37 +456,37 @@ watch_job() {
 
 {\footnotesize
 \begin{lstlisting}[numbers=none, caption=ジョブ完了判定　疑似コード]
-# qstatの出力に対してジョブIDとジョブの実行状況を取得するための正規表現
+# qstat の出力に対してジョブ ID とジョブの実行状況を取得するための正規表現
 job_cluster_exp = re.compile(
     "(?P<id>\d+).\w+\s+\w+.\w+\s+\w+\s+\d+:\d+:\d+\s+(?P<state>\w+)\s+\w+\s+")
 
-# pjstatの出力に対してジョブIDとジョブの実行状況を取得するための正規表現
+# pjstat の出力に対してジョブ ID とジョブの実行状況を取得するための正規表現
 job_k_exp = re.compile(
     "(?P<id>\d+)\s+\w+.\w+\s+\w+\s+(?P<state>\w+)\s+[\s\w\d\[\]\/\:\-]+")
 
 is_job_still_running(job_id) {
     # 京とクラスタでは用いるコマンドが違うため分岐する必要がある（qstatとpjstatの違い）
     if environment == "cluster" {
-        # qstatコマンドを実行し実行中のジョブの状態を取得する
+        # qstat コマンドを実行し実行中のジョブの状態を取得する
         res = execute("qstat")
 
         # 改行（\n）で連結された一つの文字列となっているため, 行ごとに分離する
         job_lines = res.split('\n')
 
         # コマンドの結果の行に対してそれぞれ正規表現と一致するか確認をする
-        # ジョブIDが存在しない場合は, まだキューイングシステムにサブミットされていないか, すでに完了してキューイングシステムからの出力に表示されていないという2つのパターンが考えられるため,running_jobsにジョブの状態を保持することで判断する
+        # ジョブ ID が存在しない場合は, まだキューイングシステムにサブミットされていないか, すでに完了してキューイングシステムからの出力に表示されていないという2つのパターンが考えられるため,running_jobs にジョブの状態を保持することで判断する
         for line in job_lines {
             m = job_cluster_exp.match(line)
 
             # 一致する場合, ジョブの実行状況を記録する
             if m is not None {
                 state = m.group("state")
-                # ジョブIDがその行と一致し, かつジョブの状態がC（Complete）であるならば, ジョブは完了したと見なせる
+                # ジョブ ID がその行と一致し, かつジョブの状態がC（Complete）であるならば, ジョブは完了したと見なせる
                 if job_id == m.group("id") {
                     if state == "C" {
                         return False
                     } else {
-                        # ジョブがまだ完了していないため, ジョブIDに紐付いたジョブがキューイングシステムにサブミットされた状態であると記録する
+                        # ジョブがまだ完了していないため, ジョブ ID に紐付いたジョブがキューイングシステムにサブミットされた状態であると記録する
                         if running_jobs[job_id] == 0 {
                             running_jobs[job_id] = 1
                             return True
@@ -495,7 +495,7 @@ is_job_still_running(job_id) {
                 }
             }
         }
-        # ここまでで関数の実行が終わっていないのはqstatの出力にジョブIDが含まれていないということである. その上で, 一度でもキューイングシステムの出力に現れているのであればジョブは完了しているとみなし,そうでないならばまだサブミットされていないとみなす
+        # ここまでで関数の実行が終わっていないのは qstat の出力にジョブ ID が含まれていないということである. その上で, 一度でもキューイングシステムの出力に現れているのであればジョブは完了しているとみなし,そうでないならばまだサブミットされていないとみなす
         if running_jobs[job_id] > 0 {
             return False
         } else {
@@ -537,7 +537,7 @@ time_exp = re.compile(
     "\s+\* core time : (?P<decimal>\d+).(?P<float>\d+) sec\s+")
 
 summary(job_id, job_cnt) {
-    # ジョブIDとジョブの順番を元に, ジョブ結果のファイル名を作り実行時間を取得する
+    # ジョブ ID とジョブの順番を元に, ジョブ結果のファイル名を作り実行時間を取得する
     core_time = obtain_time("job{0}.sh.o{1}".format(job_cnt, job_id))
     return core_time
 }
@@ -601,14 +601,6 @@ IDを元にソートをかけ,ソート後の出力結果を格納した配列�
 メモリ利用状況や他のプロセスの影響も含めて実行時間が状況に応じてある程度変化することが予測される.\\
 そのため,複数回試行した上でその平均実行時間がもっとも短いものを選択するという方法を取り,
 外部からの影響を減らすことを試みた.\\
-しかしながらパラメータ候補群を全探索する方法で複数回のシミュレーションを行うには非常に時間がかかるため,
-探索範囲を一度目のシミュレーション結果を元に絞り込むことで探索範囲を狭めることができると考えた.\\
-初回のシミュレーション時に実行時間が短かった上位25％を利用するという単純なアルゴリズムではあるが,
-\begin{enumerate}
-\item プロセス数 2-28.
-\item スレッド数 2-16.
-\item 変数の配列化か否か.
-\item 配列のくくり出しをするか否か.
-\end{enumerate}
-というパラメータ候補群でシミュレーションを行った結果図 ( TODO: 図をつける)のようになったため,
-一定の効果があると言える.\\
+しかしながら, パラメータ候補群を全探索する方法で複数回のシミュレーションを行うには非常に時間がかかるため,
+探索範囲を一度目のシミュレーション結果を元に絞り込むことで探索範囲を狭めることができると考え,
+初回シミュレーションの上位25\%を対象として複数回のシミュレーションを行う形をとることとした.\\

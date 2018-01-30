@@ -1,8 +1,9 @@
 \subsubsection{Hodgkin-Huxleyマルチコンパートメントモデル}
+\label{subsec:hh-model}
 \paragraph{Hodgkin-Huxleyモデル}~\\
 神経系における情報の伝達は, ニューロンの電気的な活動によって行われる.
 こうしたニューロンの電気的活動を表現する方法として,
-1952年にHodgkinとHuxleyによってヤリイカの神経の活動電位の研究を基にした微分方程式のモデルが考案された.\\
+1952年にHodgkinとHuxleyによってヤリイカの神経の活動電位の研究を基にした微分方程式のモデルが考案された\cite{hh}.\\
 Hodgkin-Huxleyモデルでは, 各イオンに対するニューロンの細胞膜の等価性を基に, ニューロンの電気的活動を微分方程式を用いて表現している.\\
 他のモデルと比べ計算量が多い一方, 実際の生物の神経系の働きに近くたいていのイオンチャネルのモデルを表すことができるという特徴を持っている.\\
 
@@ -21,9 +22,18 @@ Hodgkin-Huxleyモデルでは, 各イオンに対するニューロンの細胞�
   g_i(V, t) & = &\overline{g}_im(V, t)^xh(V,t)^y\\
 \end{eqnarray}
 と記述される.\\
+\clearpage
+\begin{figure}[htb]
+ \begin{center}
+    \includegraphics[width=10cm]{./images/hh-circuit.pdf}
+    \caption{Hodgkin-Huxleyモデルの細胞膜の等価回路}
+    \label{fig:hh-circuit}
+ \end{center}
+\end{figure}
+\clearpage
 $\overline{g}_i$は$g_i$の最大値であり, $m, h \in (0, 1)$はそれぞれ活性化パラメータ, 不活性化パラメータと呼ばれる無次元数である.\\
 また, x, yはそれぞれ実験データを元に求められる整数である.\\
-活性化パラメータ, 不活性化パラメータであるm, hはさらにそれぞれ次の微分方程式（式（ TODO: 式番号））で表現される.\\
+活性化パラメータ, 不活性化パラメータであるm, hはさらにそれぞれ次の微分方程式（式2.6から式2.12）で表現される.\\
 \begin{eqnarray}
   \frac{m(V,t)}{dt} & = &\frac{m_\infty(V) - m(V, t)}{\tau_m(V)}\\
   \frac{h(V,t)}{dt} & = &\frac{h_\infty(V) - h(V, t)}{\tau_h(V)}\\
@@ -44,24 +54,16 @@ HodgkinとHuxleyが提唱したモデルにおいて, モデルは電位依存�
   I_{l} & =& g_l(V - E_l)\\
 \end{eqnarray}
 
-\begin{figure}[htb]
- \begin{center}
-    \includegraphics[width=8cm]{./images/hh-circuit.pdf}
-    \caption{Hodgkin-Huxleyモデルの細胞膜の等価回路}
-    \label{fig:hh-circuit}
- \end{center}
-\end{figure}
-
-\paragraph{マルチコンパートメントモデル}
+\paragraph{マルチコンパートメントモデル}~\\
 \ref{subpar-hh-model}で述べたHodgkin-Huxleyモデルは細胞を一つの回路と見做してモデル化しており,
 その際に細胞の形態は考慮されていない. しかしながら, 実際の細胞は複雑な形態を有しており,
-細胞全体ではなく細胞の一部のみが発火するような応答を示すことが知られている（ TODO add ref）ため,
+細胞全体ではなく細胞の一部のみが発火するような応答を示すことが知られているため\cite{fujiwara-master},
 より詳細なシミュレーションを行うためには細胞の形態についてもモデル化する必要がある.\\
 そこで今回マルチコンパートメントモデルという神経細胞の3次元的な特性を表現するモデルを導入する.\\
 マルチコンパートメントモデルでは, 図\ref{fig:multi-compartment}のように神経細胞の形態を多数のシリンダーの連なりとして表現する.
 各シリンダをコンパートメントと呼び, 前節で示したHodgkin-Huxleyモデルの計算はコンパートメント単位で行う. すなわち,
 n番目のコンパートメントの親となるコンパートメントを$n_{parent}$とし, 子となるコンパートメントをそれぞれ$n_{child_{i}}$とするとき,
-マルチコンパートメントHodgkin-Huxleyモデルにおける式（1）は,
+マルチコンパートメントHodgkin-Huxleyモデルにおける式2.1は,
 \begin{eqnarray}
   I_{m}^{n} & = & C_{m}^{n}\frac{dV}{dt} + \sum_{i} I_{i}^{n} + I^{n_{parent}, n} - \sum_{i} I^{n, n_{child_{i}}}\\
 \end{eqnarray}
@@ -75,3 +77,4 @@ n番目のコンパートメントの親となるコンパートメントを$n_{
     \label{fig:multi-compartment}
  \end{center}
 \end{figure}
+\clearpage

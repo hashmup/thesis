@@ -1,4 +1,5 @@
 \subsection{シミュレータ}
+\label{subsec:neuron}
 NEURONは,Yale大学のHinesらによって開発されている神経回路・細胞シミュレーションソフトウェアであり,
 神経回路シミュレーションにおいて標準の一つとなっており,先行研究としてあげた宮本らによる
 手動での高速化においても対象となったソフトウェアである.　そのため,本研究の目的である神経回路シミュレーションの自動最適化の
@@ -6,26 +7,26 @@ NEURONは,Yale大学のHinesらによって開発されている神経回路・�
 
 \subsubsection{全体構成}
 NEURONでは,MODファイルとHOCファイルと呼ばれる二つのファイルに必要な情報を記述することで神経回路シミュレーションを行っている.\\
-MODファイルはその名のとおり神経細胞のモデルを記述するファイルであり, ( TODO : 章番号)で示したように神経細胞を数理モデルとして記述する.\\
+MODファイルはその名のとおり神経細胞のモデルを記述するファイルであり, \ref{subsec:hh-model}で示したHodgkin-Huxleyモデルのように神経細胞を数理モデルとして記述する.\\
 一方でHOCファイルと呼ばれるファイルにはMODファイルで記述された神経細胞モデル間のつながりや,
 シミュレーション時間などシミュレーションそのものに関与する設定を記述する.\\
-より具体的には,図 ( TODO: 番号)で示したように,nrnivmodlと呼ばれるトランスパイラによってMODファイルは対応するCファイルに変換される.
-このCファイルはさらにGCCやICCといったC言語のコンパイラによってオブジェクトファイルになり,ここで生成されたオブジェクトファイルと
+より具体的には,図\ref{fig:neuron}で示したように,nrnivmodlと呼ばれるトランスパイラによってMODファイル（model.mod）は対応するCファイル（model.c）に変換される.
+このCファイルはさらにGCCやICCといったC言語のコンパイラによってオブジェクトファイル（model.o）になり,ここで生成されたオブジェクトファイルと
 NEURON本体がリンクされることによってNEURONの実行形式が作成されることになる.
 そのため,MODファイルとして利用者が作成したモデルは実行時にはNEURONに組み込まれていることとなる.\\
-最終的にこうして生成されたNEURONの実行形式に対してシミュレーションの情報を記述したHOCファイルを渡すことでシミュレーションが実行される.\\
+最終的にこうして生成されたNEURONの実行形式に対してシミュレーションの情報を記述したHOCファイル（simulation.hoc）を渡すことでシミュレーションが実行される.\\
+\clearpage
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
-    \includegraphics[width=0.9\textwidth, angle=-90]{./images/neuron}
+    \includegraphics[width=10cm]{./images/neuron}
     \caption{NEURONの全体構成}
     \label{fig:neuron}
   \end{center}
 \end{figure}
-\clearpage
 宮本らによる先行研究\cite{miyamoto-master}では,主にこのMODファイルからCファイルへの変換に着目し,nrnivmodlによって作成されたCファイルを手動にて
 最適化することでシミュレーション全体の高速化を達成した.\\
-そのため,本研究においてはnrnivmodlに変わるトランスパイラを作成し自動での高速化を図る.\\
+本研究では最適化の手法を踏襲しつつ, nrnivmodlに変わるトランスパイラを作成することで自動での高速化を図る.\\
 
 \subsubsection{NEURONのコンパイル}
 \paragraph{クラスタ上でのコンパイル}~\\
@@ -53,7 +54,7 @@ NEURONのコンパイルは内部的には,
 \end{enumerate}
 という手順を踏んでいるが,この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため,1について
 ネイティブコンパイルで,2,3,4についてはクロスコンパイルで行う必要がある.\\
-またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する（宮本　修論より引用）\\
+またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する.（\cite{miyamoto-master}より引用）\\
 \subparagraph{nmodlのコンパイル}~\\
 {\footnotesize
 \begin{lstlisting}[caption=京でのnmodlのコンパイル,label=k-nmodl-compile,numbers=none]

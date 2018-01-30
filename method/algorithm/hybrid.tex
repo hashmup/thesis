@@ -1,5 +1,6 @@
 \subsubsection{ハイブリッド並列化}
-\paragraph{OpenMP}
+\label{subsubsec:hybrid}
+\paragraph{OpenMP}~\\
 NEURONでは, POSIX Threadによるスレッド並列が実装されているが, 京上ではOpenMPによるスレッド並列化しかサポートされていない.
 宮本らによる先行研究\cite{miyamoto-master}において, OpenMPベースのバイブリッド並列化機構がNEURONに実装されていたため
 本研究ではこのOpenMPが組み込まれているNEURONを用いてシミュレーションを行った.\\
@@ -11,7 +12,7 @@ export OMP_NUM_THREADS=16
 }
 とすることでOpenMPのスレッド数を指定することができる.\\
 
-\paragraph{MPI}
+\paragraph{MPI}~\\
 MPIはほとんどの並列計算機に入っているものであり, NEURONでも特別な変更を加えることなく利用することができる.\\
 京とクラスタで指定する方法は違うものの, 双方ともにジョブスクリプトに利用したいプロセス数を記述することでMPIを使用することができる.\\
 クラスタにおいては,
@@ -28,7 +29,7 @@ MPIはほとんどの並列計算機に入っているものであり, NEURONで
 }
 とすることでMPIのプロセス数を指定することができる.\\
 
-\paragraph{ハイブリッド並列化}
+\paragraph{ハイブリッド並列化}~\\
 並列化をする際にOpenMPとMPIと組み合わせることをOpenMPとMPIのハイブリッド並列化という.\\
 OpenMPとMPIはそれぞれ長所と短所を持つが, 規模が小さい場合スレッド生成のコストが大きくMPIのみを利用するFlat MPIの性能が
 ハイブリッド化するよりも優れていることが多い.\\

@@ -29,7 +29,7 @@ def sort_and_hash_log(self, lines):
     spike_stat = {}
     end = {}
     spike = {}
-    # processIDの最大値を記憶しておくための変数
+    # processID の最大値を記憶しておくための変数
     maxid = 0
     # ファイルないのすべての行に対して正規表現と合致するものを抜き出す
     for line in lines:
@@ -40,7 +40,7 @@ def sort_and_hash_log(self, lines):
             maxid = max(maxid, pid)
             continue
         m = spike_exp.match(line)
-        # 各Spikeに関してのみ複数行あるため,2次元で情報をストアする
+        # 各 Spike に関してのみ複数行あるため,2次元で情報をストアする
         if m:
             pid = int(m.group("pid"))
             idvec = int(m.group("idvec"))
@@ -54,7 +54,7 @@ def sort_and_hash_log(self, lines):
         if m:
             pid = int(m.group("pid"))
             end[pid] = line
-    # spike, spikeの統計量,そのプロセスの統計量をprocessID順に並べ替える
+    # spike, spike の統計量,そのプロセスの統計量を processID 順に並べ替える
     for pid in range(maxid + 1):
         _lines.append(spike_stat[pid])
         for line in spike[pid]:

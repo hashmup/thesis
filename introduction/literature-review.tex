@@ -4,14 +4,13 @@
 神経回路シミュレーションを手動で最適化する取り組みは当研究室でも行われてきた.
 宮本らの研究\cite{miyamoto-master}では, 神経回路シミュレーションを行うためのソフトウェアであるNEURONの上で
 イオンチャネルモデルの一つであるHodgkin-Huxley型モデルを対象として最適化を行った.\\
-NEURONの詳細については後述（ TODO: NEURONの節にレファレンス）するが, NEURONではMODファイルと呼ばれる神経細胞モデルを記述するファイルが
+NEURONの詳細については後述（\ref{subsec:neuron}）するが, NEURONではMODファイルと呼ばれる神経細胞モデルを記述するファイルが
 C言語ファイルに変換され実行形式が生成される. しかしながらここで生成されるC言語ファイルには無駄が多いため, 生成されたファイルを
 より計算機やモデルの特性にあった形に手動で修正することが可能である.\\
-（ TODO: 図）
 宮本らの研究において対象とした計算機はスーパーコンピュータ京であり, 京上で十分な性能を発揮するため以下にあげるような最適化を行った.\\
 
 \begin{enumerate}
-\item 常微分方程式の変数を配列化することによるSIMD化
+\item 常微分方程式の変数を配列化することによるSIMD化.
 \item 配列構造のくくり出し.
 \item OpenMPとMPIを用いてのハイブリッド並列化.
 \item ノード配置の最適化.
@@ -20,6 +19,7 @@ C言語ファイルに変換され実行形式が生成される. しかしな�
 
 
 \subsubsection{神経回路シミュレーションのベンチマークモデル}
+\label{subsec:bench-model}
 \ref{sec:section1-1-1}において行った最適化の効果を定性的に評価する必要があった.\\
 そのため宮本らは神経回路シミュレーションのベンチマークモデルを作成し,
 次に示す3種類のネットワークを構築することで最適化の効果を測った.\\
@@ -30,22 +30,22 @@ C言語ファイルに変換され実行形式が生成される. しかしな�
 \end{enumerate}
 
 以下に, 各ネットワークの概要と疑似コードを示す. また, 疑似コード内での定数と関数については
-\begin{enumerate}
+\begin{itemize}
 \item NCELL : 細胞数
 \item NSYNAPSE : 細胞1つあたりのシナプス数
 \item RND : 1以上かつ細胞数より少ない整数の乱数
 \item makeSynapse(X, Y) : シナプス前末端を細胞X, シナプス後末端を細胞Yに作成し接続する
-\end{enumerate}
+\end{itemize}
 とし, 細胞内でのシナプスの位置はランダムとした.\\
 
-\begin{figure}[h!]
+\begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
-%  \begin{left}
+ \begin{center}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
     \includegraphics[width=10cm, angle=-90]{./images/bench.pdf}
     \caption{ベンチマークに用いたネットワーク}
     \label{fig:bench-network}
-%  \end{left}
+ \end{center}
 \end{figure}
 
 \paragraph{リングネットワーク}~\\
@@ -73,7 +73,7 @@ for (int i=0; i<NCELL; i++) {
 \paragraph{Watts and Strogatzワーク}~\\
 実際の神経回路ネットワークは, リングでも完全なランダムでもないと考えられる.
 そこで, それら2つのネットワークの中間的なネットワークに位置付けられるWatts and Strogatzネットワークについてもベンチマークの対象としていた.
-Watts and Strogatzネットワークは, リングネットワークを作成した後, 確率 p < 1で後末端をランダムに繋ぎかえるものである.
+Watts and Strogatzネットワークは, リングネットワークを作成した後, 確率 p $<$ 1で後末端をランダムに繋ぎかえるものである.
 {\footnotesize
 \begin{lstlisting}[numbers=none, caption=Watts and Strogatzネットワークの作成]
 P = NSYNAPSE * p;

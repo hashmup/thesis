@@ -2,11 +2,11 @@
 先行研究\cite{miyamoto-master}では,モデルに依存するパラメータを調節するために,
 計算モデルが記述されたMODファイルからnmodlを介して生成されたCファイルを手動で変更を加えることで最適化を図っていた.\\
 本研究では,自動チューニングを目的としているため,このプロセスも自動化する必要があり,そのためにこのMODからCへ変換するトランスパイラを作成した.\\
-MODをパースするにあたってはDomain-Specific Languagesを作成するためのPythonライブラリである,textX ( TODO: ref)を利用し,
-またMODのContext Free GrammarはMODファイルからNeuroMLを生成するためのプロジェクトであるpynmodl ( TODO: ref)のプログラムを用いた.\\
+MODをパースするにあたってはDomain-Specific Languagesを作成するためのPythonライブラリである,textX\cite{textX-repo}を利用し,
+またMODのContext Free GrammarはMODファイルからNeuroMLを生成するためのプロジェクトであるpynmodl\cite{pynmodl-repo}のプログラムを用いた.\\
 
 \subsubsection{nmodl}
-NEURONに付属しているトランスパイラであるnmodlは,MODファイルをlexとyacc ( TODO: lex yaccの参照)を用いてパースした情報を
+NEURONに付属しているトランスパイラであるnmodlは,MODファイルをlexとyacc\cite{lex}を用いてパースした情報を
 C言語のテンプレートに埋め込むことで対応するC言語のファイルを出力している.\\
 このテンプレート化された部分の中にはNEURON本体とリンクさせるために必要な情報も多数あるため,
 本研究で作成するトランスパイラもnmodlのC言語テンプレートをベースに利用した.\\
@@ -32,18 +32,18 @@ DSLとは, C言語等に代表される汎用言語ではなく, 微分方程式
 \clearpage
 
 \subsubsection{構成}
-( TODO: 章番号)のアルゴリズムで触れた中で,トランスパイラ内で実装を行ったのはモデルに依存するパラメータであり,
+\ref{sec:algorithm}のアルゴリズムで触れた中で,トランスパイラ内で実装を行ったのはモデルに依存するパラメータであり,
 NEURON本体で細胞単位での計算の並列化等の設定もできるため,主に逐次プログラムの最適化を主眼に置いた.\\
 
 MODファイルをC言語のファイルに変換する際,変換されたC言語のファイルは,\\
-\begin{enumerate}
+\begin{itemize}
 \item nmodl内でテンプレート化されている共通部分（base）
 \item グローバル変数や関数定義部分（definition）
 \item それぞれの関数や変数をNEURONとリンクさせる部分（register）
 \item ユーザー定義関数部分（user）
 \item NEURON本体と関連する関数部分（neuron）
 \item ODE（微分方程式）を計算する関数部分（ode）
-\end{enumerate}
+\end{itemize}
 の6つに分けることができる.\\
 
 \begin{figure}[htb]
@@ -245,7 +245,7 @@ simdize_exp(exp, token_list) {
 }
 
 \paragraph{配列構造のくくり出し}~\\
-アルゴリズムの章（ TODO : 章番号）において,Union-Find木を用いてMODファイル内の式を分類することで,
+\ref{sec:algorithm}において,Union-Find木を用いてMODファイル内の式を分類することで,
 配列としてくくり出せる変数をグループ化する手法について述べた.\\
 グループ化された変数をもとに配列をくくり出す際, 配列に対するアクセス方法が変わってしまうため対応する箇所をすべて変更しなければならないという
 問題が生じた. そこで, 配列へのアクセスをマクロを通して行うことで同一の方法でくくり出した配列にもアクセスできるようにした.\\

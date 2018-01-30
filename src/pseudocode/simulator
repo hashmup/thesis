@@ -1,12 +1,12 @@
 # グローバル変数
 # ジョブの最大同時実行数を指定
 MAX_NUM_JOB = 4
-# 実行中のジョブIDを保存する配列
+# 実行中のジョブ ID を保存する配列
 # ジョブが完了したか否かの判定で利用する
 running_job = []
 
 main():
-  # ジョブの監視を行う関数であるwatch_job()を別スレッドで立ち上げる
+  # ジョブの監視を行う関数である watch_job () を別スレッドで立ち上げる
   watch_job()
 
   # モデルに関連するパラメータ, コンパイルに関連するパラメータ
@@ -17,7 +17,7 @@ main():
     model_param = model_param_candidates.next()
     while compile_param_candidates.has_next()
       compile_param = compile_param_candidates.next()
-      # モデルとコンパイルに関するパラメータを用いて,NEURONの実行形式を
+      # モデルとコンパイルに関するパラメータを用いて, NEURON の実行形式を
       # 作成する
       build(model_param, compile_param)
 

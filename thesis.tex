@@ -11,6 +11,14 @@
 \setlength{\headheight}{9.6truemm} %% 上下余白35mm
 \setlength{\topmargin}{9.6truemm}
 \setlength{\headsep}{-15truemm}
+% 図と図の間のスペース
+\setlength\floatsep{2truemm}
+% 本文と図の間のスペース
+\setlength\textfloatsep{2truemm}
+% 本文中の図のスペース
+\setlength\intextsep{0truept}
+% 図とキャプションの間のスペース
+\setlength\abovecaptionskip{1truemm}
 \setcounter{secnumdepth}{4}
 %% 代わりに以下2行でもOK
 %% \usepackage{geometry}
@@ -62,6 +70,10 @@
 \def\@professor{神崎亮平}
 \def\id#1{\def\@id{#1}}
 \def\department#1{\def\@department{#1}}
+
+\renewcommand{\theequation}{%
+\thesection.\arabic{equation}}
+\@addtoreset{equation}{section}
 
 \def\@maketitle{
 \begin{center}

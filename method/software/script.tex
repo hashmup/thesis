@@ -3,7 +3,7 @@
 実行するPythonのバージョンの制約を受ける.\\
 そのため京に代表されるPython3が存在せず, 管理者権限を持つことができない環境においては,
 管理者権限を必要とせずユーザーの権限の中でPythonのプログラムを実行できる環境を構築する必要がある.\\
-この問題を解決するため, Pyenv ( TODO: Pyenvのref)というPython専用の仮想環境を構築するライブラリを利用し,
+この問題を解決するため, Pyenv\cite{pyenv-repo}というPython専用の仮想環境を構築するライブラリを利用し,
 仮想環境上でソフトウェアを実行することにした.\\
 この方法を用いることで, 実行する計算機によってソフトウェアを変更する必要はなくなったが,
 実行するための環境を構築する手間がかかるため,以下に示す環境構築スクリプトを作成した.\\
@@ -17,7 +17,7 @@ make install
 # scripts/pull_required_projects.sh を実行する
 make pull
 
-# make install, make pullの順で実行する
+# make install, make pull の順で実行する
 make setup
 
 # シミュレーションを行うコマンド
@@ -41,12 +41,12 @@ scripts/
 {\footnotesize
 \begin{lstlisting}[numbers=none, caption=必要なライブラリ]
 Python
-    pandas: シミュレータでパラメータやそれぞれのパラメータに対応する結果を保持するデータ管理ライブラリ ( TODO : ちゃんと説明)
+    pandas: シミュレータでパラメータやそれぞれのパラメータに対応する結果を保持するデータ管理ライブラリ
     textX: トランスパイラで MOD ファイルから抽象木を生成する際に利用するメタ言語を作成するためのライブラリ
     jinja2: トランスパイラで C 言語のファイルを生成する際に利用するテンプレートライブラリ
 
 NEURON
-    neuron_kplus: 宮本らの先行研究によって作成されたNEURON本体とそのインストールスクリプト等を含んだソース群
+    neuron_kplus: 宮本らの先行研究によって追加実装された NEURON 本体と, そのインストールスクリプト等を含んだソース群
 \end{lstlisting}
 }
 

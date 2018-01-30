@@ -1,9 +1,9 @@
-TITLE hh_k.mod   squid sodium, potassium, and leak channels
+TITLE hh_k.mod squid sodium, potassium, and leak channels
 
 UNITS {
   (mA) = (milliamp)
   (mV) = (millivolt)
-	(S) = (siemens)
+  (S) = (siemens)
 }
 
 ? interface
@@ -14,7 +14,7 @@ NEURON {
   NONSPECIFIC_CURRENT il
   RANGE gnabar, gkbar, gl, el, gna, gk
   GLOBAL minf, hinf, ninf, mtau, htau, ntau
-  THREADSAFE : assigned GLOBALs will be per thread
+  THREADSAFE
 }
 
 PARAMETER {
@@ -34,15 +34,15 @@ ASSIGNED {
   ena (mV)
   ek (mV)
 
-	gna (S/cm2)
-	gk (S/cm2)
+  gna (S/cm2)
+  gk (S/cm2)
   ina (mA/cm2)
   ik (mA/cm2)
   il (mA/cm2)
   minf
   hinf
   ninf
-	mtau (ms)
+  mtau (ms)
   htau (ms)
   ntau (ms)
 }
@@ -51,18 +51,18 @@ ASSIGNED {
 BREAKPOINT {
   SOLVE states METHOD cnexp
   gna = gnabar * m * m * m * h
-	ina = gna * (v - ena)
+  ina = gna * (v - ena)
   gk = gkbar * n * n * n * n
-	ik = gk * (v - ek)
+  ik = gk * (v - ek)
   il = gl * (v - el)
 }
 
 
 INITIAL {
-	rates(v)
-	m = minf
-	h = hinf
-	n = ninf
+  rates(v)
+  m = minf
+  h = hinf
+  n = ninf
 }
 
 ? states
@@ -75,7 +75,7 @@ DERIVATIVE states {
 
 ? rates
 PROCEDURE rates(v (mV)) {
-  LOCAL  alpha, beta, sum, q10
+  LOCAL alpha, beta, sum, q10
   TABLE minf, mtau, hinf, htau, ninf, ntau DEPEND celsius FROM -100 TO 100 WITH 200
 
 UNITSOFF
@@ -83,16 +83,16 @@ UNITSOFF
   alpha = .1 * vtrap(-(v + 40), 10)
   beta =  4 * exp(-(v + 65) / 18)
   sum = alpha + beta
-	mtau = 1 / (q10 * sum)
+  mtau = 1 / (q10 * sum)
   minf = alpha / sum
   alpha = .07 * exp(-(v + 65) / 20)
   beta = 1 / (exp(-(v + 35) / 10) + 1)
   sum = alpha + beta
-	htau = 1 / (q10 * sum)
+  htau = 1 / (q10 * sum)
   hinf = alpha / sum
   alpha = .01 * vtrap(-(v + 55), 10)
   beta = .125 * exp(-(v + 65) / 80)
-	sum = alpha + beta
+  sum = alpha + beta
   ntau = 1 / (q10 * sum)
   ninf = alpha / sum
 }
@@ -104,5 +104,4 @@ FUNCTION vtrap(x, y) {
     vtrap = x / (exp(x / y) - 1)
   }
 }
-
 UNITSON

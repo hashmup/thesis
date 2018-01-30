@@ -1,17 +1,18 @@
-\section{シミュレーション結果}
-本実験（ TODO: ?）では, 作成したシミュレータを用いてHodgkin-Huxleyモデルの神経細胞モデル（ TODO: ref）からなる（ TODO: 章番号）で示したベンチマークネットワークを最適化しシミュレーションを行い,
+\section{シミュレーションの結果}
+\label{sec:sim-result}
+本実験（ TODO: ?）では, 作成したシミュレータを用いてHodgkin-Huxleyモデルの神経細胞モデル\ref{subsec:hh-model}からなる\ref{subsec:bench-model}で示したベンチマークネットワークを最適化しシミュレーションを行い,
 その後シミュレーションの結果を用いて最適化に用いたパラメータを定量的に評価する.\\
 本論文執筆時においてパラメータの探索は全探索を用いているため, パラメータすべての組み合わせを大規模なシミュレーションで行うことは現実的ではない.
-そのため, （  TODO: アルゴリズムの説）で述べたように, 実行マシンに関わるパラメータ（プロセス数とスレッド数）は並列実行に関連するものであり,
+そのため,\ref{sec:algorithm}で述べたように, 実行マシンに関わるパラメータ（プロセス数とスレッド数）は並列実行に関連するものであり,
 モデルに関わるパラメータ（SIMD化と配列のくくり出し）は逐次実行に関するものであるという事実を利用する.\\
 5.1節では, シミュレーション時間をスパイクが出始める100msに設定したシミュレーションを3回行い,
 その平均をとった実行時間を用いてパラメータの評価を行い, 大規模のシミュレーションを行う際に除外できるパラメータ候補の絞り込みを行う.\\
 5.2節から5.5節においては, 5.1節で絞り込んだそれぞれのパラメータに対して規模の変更を通してより詳細なシミュレーションを行う.\\
-5.6節においては, それまでの結果を利用しNEURONのデフォルトと手動での最適化を図ったシミュレーションとの比較を行う.\\
 また, コンパイラについては京環境でICCを利用することができなかったため, クラスタ環境上でのみシミュレーションを行い,
 最適化の指標の一つとするにとどまった.\\
 
 \subsection{小規模シミュレーションでのパラメータ比較}
+\label{subsec:small-sim}
 本節では, ベンチーマクモデルの中で実際の神経回路ネットワークと最も近いと考えられるWatts and Strogatzネットワークに対して
 以下のパラメータを用いてシミュレーションを行った.\\
 \subsubsection{クラスタ環境}
@@ -42,7 +43,7 @@ y軸は実行時間を示している.\\
 % h:here, t:top, b:bottom, p:page
  \begin{center}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-    \includegraphics[width=1.2\textwidth]{./images/cluster-bench.pdf}
+    \includegraphics[width=14cm]{./images/cluster-bench.pdf}
     \caption{クラスタ 小規模シミュレーション結果}
     \label{fig:cluster-bench}
  \end{center}
@@ -53,7 +54,7 @@ y軸は実行時間を示している.\\
 % h:here, t:top, b:bottom, p:page
  \begin{center}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-    \includegraphics[width=1.2\textwidth]{./images/cluster-bench-top25.pdf}
+    \includegraphics[width=14cm]{./images/cluster-bench-top25.pdf}
     \caption{クラスタ 小規模シミュレーション結果 上位25\%}
     \label{fig:cluster-bench-top25}
  \end{center}
@@ -67,12 +68,13 @@ y軸は実行時間を示している.\\
 % h:here, t:top, b:bottom, p:page
 \begin{center}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-    \includegraphics[width=1.2\textwidth]{./images/cluster-bench-adjusted-final.pdf}
+    \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
     \label{fig:cluster-bench-adjusted-final}
 \end{center}
 \end{figure}
-また絞り込みを行ったパラメータは次のようになる.\\
+\clearpage
+また絞り込みを行った後のパラメータは次のようになる.\\
 \begin{table}[htb]
   \caption {クラスタでの絞り込み後のパラメータ}
   \begin{center}
@@ -88,7 +90,6 @@ y軸は実行時間を示している.\\
   \end{center}
 \end{table}
 
-\clearpage
 \subsubsection{京環境}
 \begin{table}[htb]
   \caption {京でのパラメータ}
@@ -107,14 +108,188 @@ y軸は実行時間を示している.\\
   \end{center}
 \end{table}
 京においてもクラスタ同様パラメータの絞り込みを小規模シミュレーションを用いて行った.\\
+図\ref{fig:k-bench}のMPIプロセス数に着目すると, それぞれのプロセス数に対し30番目前後で大きな
+隔たりがあることがわかる. SIMDのグラフにおいてもSIMDがデフォルトのソースコードを大きく上回っていること,
+またシミュレーションの設定上SIMDとそうでないものが2対1の比率であり,
+30番目付近を境としたMPIプロセス数における比率と同じであることからこの隔たりはSIMD化が影響していることがわかる.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/k-bench.pdf}
+    \caption{京 小規模シミュレーション結果}
+    \label{fig:k-bench}
+\end{center}
+\end{figure}
+\clearpage
+一方で, シミュレーション結果の実行時間が早い上位25\%のパラメータを示した図\ref{fig:k-bench-top25}では,
+プロセス数8のものが他のプロセス数と比較して抜きん出て高速であることが読み取れる.
+また, SIMD化されていないパラメータ候補はすでに除外されており,
+候補数がすでに十分制限されているためプロセス数とSIMD化のみを絞り込みの条件として用いた.\\
 
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/k-bench-top25.pdf}
+    \caption{京 小規模シミュレーション結果 top25\%}
+    \label{fig:k-bench-top25}
+\end{center}
+\end{figure}
 
-\subsection{MPIプロセス数}
+以下がクラスタと同様に京で小規模シミュレーションを元に絞り込みを行ったパラメータ候補である.\\
+クラスタと京の絞り込み後のパラメータから（ TODO: mpi openmp）で述べたように,
+小規模環境においてはMPIプロセスが最適化の中で大きな役割を果たすことがわかり,
+コアのほとんどをMPIプロセスで利用する場合に高速になる傾向が強いことがわかった.\\
+また京において, 配列のくくり出しをしない方がより高速化されていることが図\ref{fig:k-bench-adjusted-final}の右下のグラフから読み取れるが,
+これは京がアーキテクチャとしてSIMDに強く京で用いられるコンパイラもSIMDに適していることが原因であると推察される.
+\begin{table}[htb]
+  \caption {京でのパラメータ 絞り込み後}
+  \begin{center}
+    \begin{tabular}{|c|p{12cm}|}
+      \hline
+      パラメータ & 値の範囲\\ \hline
+      ノード数 & 8\\ \hline
+      MPIプロセス数 & 8\\ \hline
+      OpenMPスレッド数 & 1〜16\\ \hline
+      SIMD化 & 行う\\ \hline
+      配列のくくり出し & 行う（SIMD化を行っているならば） or 行わない\\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
-\subsection{OpenMPスレッド数}
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/k-bench-adjusted-final.pdf}
+    \caption{京 小規模シミュレーション結果 パラメータ絞り込み後}
+    \label{fig:k-bench-adjusted-final}
+\end{center}
+\end{figure}
+\clearpage
+次に小規模のシミュレーションを通して絞り込んだパラメータを用いて,
+実行時間と反復する回数を変えてシミュレーションを再度行い,
+実行時間とパラメータの関係を調べる.\\
 
-\subsection{SIMD化}
+\subsection{詳細なシミュレーションでのパラメータ比較}
+\label{subsec:detail-sim}
+ここでは\ref{subsec:small-sim}において絞り込みを行ったパラメータを用い,
+京, クラスタそれぞれにおいて実行時間を50, 100, 250, 500, 1000msとして6回シミュレーションを行いその実行時間の平均をとることで,
+より詳細にパラメータの比較を行った.
+尚, SIMD化については\ref{subsec:small-sim}について既にSIMD化を行わないパラメータは除外されているためここでは触れない.\\
 
-\subsection{配列のくくり出し}
+\subsubsection{MPIプロセス数}
+\paragraph{クラスタ}~\\
+図\ref{fig:cluster-mpi-process}のプロセス数に注目すると, プロセス数が28の時を除きシミュレーション時間を長くしてもMPIプロセス数間の関係に変化は見られない.\\
+クラスタにおいてはコア数が28であることから,
+シミュレーション時間が最大で1000msと短く細胞数も少ない今回のような場合においてはMPIプロセスでコアを埋めきるほうが計算性能が高くなることが読み取れる.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=12cm]{./images/cluster-MPI-process.pdf}
+    \caption{クラスタ MPIプロセス数 シミュレーション結果}
+    \label{fig:cluster-mpi-process}
+\end{center}
+\end{figure}
+\clearpage
 
-\subsection{最適化結果の比較}
+\paragraph{京}~\\
+% \begin{figure}[htb]
+% % h:here, t:top, b:bottom, p:page
+% \begin{center}
+% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
+%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
+%     \label{fig:cluster-bench-adjusted-final}
+% \end{center}
+% \end{figure}
+% \clearpage
+
+\subsubsection{OpenMPスレッド数}
+\paragraph{クラスタ}~\\
+OpenMPスレッドについては他のパラメータと違いスレッド数の間で大きな差が見られない傾向にあったため,
+図\ref{fig:cluster-openmp}のように折れ線グラフを用いてどの程度混在しているのか確認した.\\
+
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/cluster-OpenMP-thread.pdf}
+    \caption{クラスタ OpenMPスレッド数 シミュレーション結果}
+    \label{fig:cluster-openmp}
+\end{center}
+\end{figure}
+
+図\ref{fig:cluster-openmp}において表示されるデータ点が多すぎるため,
+データ点の数を50個に制限したものを次の図\ref{fig:cluster-openmp-top50}に示す.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/cluster-top50-OpenMP-thread.pdf}
+    \caption{クラスタ OpenMPスレッド数 シミュレーション結果 上位50組}
+    \label{fig:cluster-openmp-top50}
+\end{center}
+\end{figure}
+
+結果として, データ点を制限して表示した図においてもスレッド数と実行時間の直接的な相関を見ることができなかった.
+これは\ref{subsubsec:hybrid}において述べたMPIとOpenMPのハイブリッドという観点では,
+シミュレーションの規模が小さくMPIプロセスが通信に用いるリソースが十分に存在したため,
+MPIによってコアを埋めた後ではOpenMPのスレッド数をいくつに設定しても実行時間に与える影響が少ないためだと考えられる.\\
+\clearpage
+
+\paragraph{京}~\\
+% \begin{figure}[htb]
+% % h:here, t:top, b:bottom, p:page
+% \begin{center}
+% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
+%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
+%     \label{fig:cluster-bench-adjusted-final}
+% \end{center}
+% \end{figure}
+% \clearpage
+
+\subsubsection{配列のくくり出し}
+\paragraph{クラスタ}~\\
+変数の配列化を通してコンパイラによるSIMD化を促進することで計算能力が大きく向上することは,
+前節の結果から読み取れる. ここでは配列化を行った変数に対してさらにくくり出しを行った場合と行わなかった場合を比較する.\\
+また図\ref{fig:cluster-roa}において実行時間が早い前半部分が潰れてしまっているため,
+図\ref{fig:cluster-roa-top50}に他のパラメータと同じく拡大した図を示す.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/cluster-SIMD-and-RoA.pdf}
+    \caption{クラスタ 配列のくくり出し シミュレーション結果}
+    \label{fig:cluster-roa}
+\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/cluster-top50-SIMD-and-RoA.pdf}
+    \caption{クラスタ 配列のくくり出し シミュレーション結果 上位50組}
+    \label{fig:cluster-roa-top50}
+\end{center}
+\end{figure}
+シミュレーション時間が長くなるに連れ,
+配列のくくり出しを行わずSIMD化のみを用いたほうが高速化されるように見られるが,
+実行時間の差を比較するとシミュレーション時間が倍になった場合でもほぼ一定の差になっているため,
+本論文執筆時においての実装では実行時間への影響は少ないことがわかる.\\
+
+\paragraph{京}~\\
+% \begin{figure}[htb]
+% % h:here, t:top, b:bottom, p:page
+% \begin{center}
+% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
+%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
+%     \label{fig:cluster-bench-adjusted-final}
+% \end{center}
+% \end{figure}
+% \clearpage
