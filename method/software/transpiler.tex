@@ -10,7 +10,6 @@ NEURONに付属しているトランスパイラであるnmodlは,MODファイ�
 C言語のテンプレートに埋め込むことで対応するC言語のファイルを出力している.\\
 このテンプレート化された部分の中にはNEURON本体とリンクさせるために必要な情報も多数あるため,
 本研究で作成するトランスパイラもnmodlのC言語テンプレートをベースに利用した.\\
-（ TODO: もう少し説明をたす）
 
 \subsubsection{textX}
 MODファイルから抽象木を構築するために, Domain Specific Language（以下DSL）作成用のPythonライブラリであるtextX\cite{textX}を用いた.
@@ -79,13 +78,11 @@ ODEを担当するモジュールのみの変更でよくなる.\\
   \end{center}
 \end{figure}~\\
 
-\clearpage
-
 \paragraph{変数の取り出し}~\\
 SIMD化と配列のくくり出しを行うために, MODファイルの中で利用されている変数を取り出す必要がある.\\
 これは前述のhh.modを例にすると,
 {\footnotesize
-\begin{lstlisting}[caption=Hodgikin-Huxleyモデルの計算式,label=hh-mod-calc,numbers=none]
+\begin{lstlisting}[caption=Hodgikin-Huxleyモデルの計算式,label=hh-mod-calc, frame=single]
 ? interface
 NEURON {
   GLOBAL minf, hinf, ninf, mtau, htau, ntau
@@ -113,7 +110,7 @@ DERIVATIVE states {
 の部分から取得できることがわかる.\\
 pynmodlでパースした抽象木では, Breakpoint, Derivative, Globalという名前がつけられているためそれぞれの式は抽象木のrootをrootという変数で保持しているとすると,
 {\footnotesize
-\begin{lstlisting}[caption=計算式の取得,label=obtain-vars,numbers=none]
+\begin{lstlisting}[caption=計算式の取得,label=obtain-vars, frame=single]
 derivative_stmts = children_of_type('Derivative', root)[0].b.stmts
 breakpoint_stmts = children_of_type('Breakpoint', root)[0].b.stmts
 \end{lstlisting}
@@ -121,7 +118,7 @@ breakpoint_stmts = children_of_type('Breakpoint', root)[0].b.stmts
 として取得することができる.\\
 また, これらの式から変数を取得するには,
 {\footnotesize
-\begin{lstlisting}[caption=変数の取得,label=obtain-vars,numbers=none]
+\begin{lstlisting}[caption=変数の取得,label=obtain-vars, frame=single]
 # 式を変数に分離する
 parse_into_token(exp) {
     # 変数の区切りとなる文字の定義
@@ -198,7 +195,7 @@ SIMD化をするためには, 計算式の中で用いられてる変数を配�
 これは変数を取得したのちに, SIMD化を行う変数を選択し式の中で該当する変数を配列化すれば良い.\\
 本研究において配列名は, \_変数名\_tableとして定義することとする.\\
 {\footnotesize
-\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars,numbers=none]
+\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars, frame=single]
 
 get_simdize_table(root, token_list) {
     code = ""
@@ -250,7 +247,7 @@ simdize_exp(exp, token_list) {
 グループ化された変数をもとに配列をくくり出す際, 配列に対するアクセス方法が変わってしまうため対応する箇所をすべて変更しなければならないという
 問題が生じた. そこで, 配列へのアクセスをマクロを通して行うことで同一の方法でくくり出した配列にもアクセスできるようにした.\\
 {\footnotesize
-\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars,numbers=none]
+\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars, frame=single]
 
 get_optimize_table(token_list, merge_table_list) {
     """

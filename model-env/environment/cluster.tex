@@ -18,9 +18,12 @@
 {\footnotesize
 \lstinputlisting[caption=クラスタのジョブスクリプト例, label=cluster-job-script,frame=single]{src/job/cluster-job}
 }
-
+\vspace{1cm}
+\begin{table}[htb]
+  \caption {クラスタでのコマンド実行例}
 {\footnotesize
-\begin{lstlisting}[caption=クラスタでのコマンド実行例,label=cluster-job-example,numbers=none]
+\begin{framed}
+\begin{verbatim}
 $ qsub job.sh
 20252.cluster.localdomain
 
@@ -32,8 +35,11 @@ Job ID                    Name             User            Time Use S Queue
 ------------------------- ---------------- --------------- -------- - -----
 20251.cluster              job.sh        inoue           00:05:38 C cluster
 20252.cluster              job.sh        inoue                  0 R cluster
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+% \caption{クラスタでのコマンド実行例}
 \clearpage
 \begin{table}[htb]
   \caption {クラスタでのジョブの状態}

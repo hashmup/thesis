@@ -1,8 +1,9 @@
 \subsection{シミュレーション環境}
 \subsubsection{計算機性能}
 本研究で使用した計算機は,スーパーコンピュータ「京」（以下京, 図\ref{fig:k}）と
-研究室クラスタ（以下クラスタ, TODO: 図）である. (TODO: 京についての説明)\\
-京の性能諸元\cite{riken-system}を表\ref{table:k}, \ref{table:k-processor}に, クラスタの性能諸元\cite{riken-system}を表\ref{table:cluster}に記す.\\
+研究室クラスタ（以下クラスタ, 図\ref{fig:cluster}）である. 京はおよそ1京FLOPS(10PFLOPS)の演算性能をもち, 2011年の6月と11月にはTOP500\cite{top500}で世界第1位を,
+2017年11月時点では世界第10位を記録している.\\
+京の性能諸元\cite{riken-system}を表\ref{table:k}, \ref{table:k-processor}に, クラスタの性能諸元\cite{intel-xeon}を表\ref{table:cluster}に記す.\\
 
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
@@ -12,7 +13,8 @@
     \label{fig:k}
   \end{center}
 \end{figure}~\\
-\begin{table}[t]
+
+\begin{table}[htb]
   \begin{center}
     \begin{tabular}{|c|p{12cm}|}
       \hline
@@ -25,9 +27,9 @@
     \label{table:k}
   \end{center}
 \end{table}~\\
-\begin{table}[t]
+\begin{table}[ht]
   \begin{center}
-    \begin{tabular}{|l|p{10cm}|}
+    \begin{tabular}{|l|l|}
       \hline
       CPU性能 & 128GFLOPS（16GFLOPS×8コア）\\ \hline
       コア数 & 8個\\ \hline
@@ -44,9 +46,26 @@
     \label{table:k-processor}
   \end{center}
 \end{table}~\\
+\vspace{-1cm}
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+  \begin{center}
+    \includegraphics[width=8.0cm]{./images/cluster.pdf}
+    \caption{研究室クラスタ}
+    \label{fig:cluster}
+  \end{center}
+\end{figure}~\\
+\clearpage
 \begin{table}[htb]
   \begin{center}
     \begin{tabular}{|c|p{12cm}|}
+      \hline
+      CPU性能 & 268\.8 GFLOPS（19.2GFLOPS×14コア）\\ \hline
+      コア数 & 14コア \\ \hline
+      キャッシュ構成 & 1次命令キャッシュ: 448KB(2way), 1次データキャッシュ: 448KB(2-way), 2次キャッシュ: 3.5MB(12-way) コア間共有\\ \hline
+      メモリ帯域 & 76.8GB/s（理論ピーク値）\\ \hline
+      動作周波数 & 2.4GHz \\ \hline
+      消費電力 & 120W\\ \hline
     \end{tabular}
     \caption{クラスタ性能}
     \label{table:cluster}
@@ -56,10 +75,11 @@
 \label{subsec:job-env}
 京に代表される大型コンピュータの場合,複数の利用者が共同で利用することが基本となる. そのため各個人が
 各々勝手にプログラムを実行すると,計算が集中することで処理限界を大幅に超えてしまったり,逆に全く利用されない時間
-などが現れてしまい計算資源を有効に活用できない. そのため,大型コンピュータではキューイングシステムを利用してプログラムが実行される.\\
+などが現れてしまい計算資源を有効に活用できない. 従って, 大型コンピュータではキューイングシステムを利用してプログラムが実行される.\\
 キューイングシステムにおける一度のプログラム実行の単位はジョブと呼ばれ,プログラムを実行する際に必要なノード数,メモリ,実行するプログラムのパスや前処理
 といった情報を書き込んだジョブスクリプトを作成し,キューイングシステムにジョブスクリプトをサブミットすることでプログラムが実行される.\\
-% kの説明
-\input{model-env/environment/k}
 % clusterの説明
 \input{model-env/environment/cluster}
+
+% kの説明
+\input{model-env/environment/k}

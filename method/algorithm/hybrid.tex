@@ -5,28 +5,45 @@ NEURONでは, POSIX Threadによるスレッド並列が実装されているが
 宮本らによる先行研究\cite{miyamoto-master}において, OpenMPベースのバイブリッド並列化機構がNEURONに実装されていたため
 本研究ではこのOpenMPが組み込まれているNEURONを用いてシミュレーションを行った.\\
 上記の実装ではOMP\_NUM\_THREADSという環境変数の値に応じてスレッドの生成数を変えるものであったため, ジョブスクリプトの内部で
+\begin{table}[htb]
+\caption {OpenMPスレッド数の指定}
 {\footnotesize
-\begin{lstlisting}[caption=OpenMPスレッド数の指定,label=cluster-job-example,numbers=none]
+\begin{framed}
+\begin{verbatim}
 export OMP_NUM_THREADS=16
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
-とすることでOpenMPのスレッド数を指定することができる.\\
+\end{table}
+とすることでOpenMPのスレッド数を指定することができる.
 
 \paragraph{MPI}~\\
-MPIはほとんどの並列計算機に入っているものであり, NEURONでも特別な変更を加えることなく利用することができる.\\
+MPIはほとんどの並列計算機に入っているものであり, NEURONでも特別な変更を加えることなく利用することができる.
 京とクラスタで指定する方法は違うものの, 双方ともにジョブスクリプトに利用したいプロセス数を記述することでMPIを使用することができる.\\
 クラスタにおいては,
+\begin{table}[htb]
+  \caption {クラスタ MPIプロセス数の指}
 {\footnotesize
-\begin{lstlisting}[caption=クラスタ MPIプロセス数の指定,label=cluster-mpi-num-process,numbers=none]
+\begin{framed}
+\begin{verbatim}
 #PBS -l ppn=8
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
-京においては,
+\end{table}
+\\
+京においては,\\
+\begin{table}[htb]
+  \caption {京 MPIプロセス数の指定}
 {\footnotesize
-\begin{lstlisting}[caption=京 MPIプロセス数の指定,label=k-mpi-num-process,numbers=none]
+\begin{framed}
+\begin{verbatim}
+#-- proc として指定する値はノード数×プロセス数 --#
 #PJM --mpi "proc=8"
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}\\
 とすることでMPIのプロセス数を指定することができる.\\
 
 \paragraph{ハイブリッド並列化}~\\
@@ -37,8 +54,5 @@ OpenMPとMPIはそれぞれ長所と短所を持つが, 規模が小さい場合
 これは単一ノードの持つネットワーク通信に使えるリソースに対し通信対象となるMPIプロセスが増えすぎることが原因となる.\\
 そのため計算規模が大きくなるほど, 同じノードの内部ではOpenMPを用いてCPUコア間で共有されているメモリを用いて通信を行い,
 外部ノードとの通信にMPIを使うことでボトルネックとなる通信を分散させることができるハイブリッドの強みを生かすことができる.\\
-
-（ TODO: 図）
-
 また京のようにスレッドバリアと呼ばれるスレッドを高速に生成する機構を持っている計算機も存在するため,
 OpenMPとMPIを用いる比率を実行マシンに依存するパラメータとして本研究では用い計算機にあった最適化を目指す.\\

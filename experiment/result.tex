@@ -1,13 +1,13 @@
 \section{シミュレーションの結果}
 \label{sec:sim-result}
-本実験（ TODO: ?）では, 作成したシミュレータを用いてHodgkin-Huxleyモデルの神経細胞モデル\ref{subsec:hh-model}からなる\ref{subsec:bench-model}で示したベンチマークネットワークを最適化しシミュレーションを行い,
+本実験では, 作成したシミュレータを用いてHodgkin-Huxleyモデルの神経細胞モデル\ref{subsec:hh-model}からなる\ref{subsec:bench-model}で示したベンチマークネットワークを最適化しシミュレーションを行い,
 その後シミュレーションの結果を用いて最適化に用いたパラメータを定量的に評価する.\\
 本論文執筆時においてパラメータの探索は全探索を用いているため, パラメータすべての組み合わせを大規模なシミュレーションで行うことは現実的ではない.
 そのため,\ref{sec:algorithm}で述べたように, 実行マシンに関わるパラメータ（プロセス数とスレッド数）は並列実行に関連するものであり,
 モデルに関わるパラメータ（SIMD化と配列のくくり出し）は逐次実行に関するものであるという事実を利用する.\\
 5.1節では, シミュレーション時間をスパイクが出始める100msに設定したシミュレーションを3回行い,
 その平均をとった実行時間を用いてパラメータの評価を行い, 大規模のシミュレーションを行う際に除外できるパラメータ候補の絞り込みを行う.\\
-5.2節から5.5節においては, 5.1節で絞り込んだそれぞれのパラメータに対して規模の変更を通してより詳細なシミュレーションを行う.\\
+5.2節においては, 5.1節で絞り込んだそれぞれのパラメータに対して規模の変更を通してより詳細なシミュレーションを行う.\\
 また, コンパイラについては京環境でICCを利用することができなかったため, クラスタ環境上でのみシミュレーションを行い,
 最適化の指標の一つとするにとどまった.\\
 
@@ -138,7 +138,7 @@ y軸は実行時間を示している.\\
 \end{figure}
 
 以下がクラスタと同様に京で小規模シミュレーションを元に絞り込みを行ったパラメータ候補である.\\
-クラスタと京の絞り込み後のパラメータから（ TODO: mpi openmp）で述べたように,
+クラスタと京の絞り込み後のパラメータから\ref{subsubsec:hybrid}で述べたように,
 小規模環境においてはMPIプロセスが最適化の中で大きな役割を果たすことがわかり,
 コアのほとんどをMPIプロセスで利用する場合に高速になる傾向が強いことがわかった.\\
 また京において, 配列のくくり出しをしない方がより高速化されていることが図\ref{fig:k-bench-adjusted-final}の右下のグラフから読み取れるが,
@@ -177,7 +177,8 @@ y軸は実行時間を示している.\\
 ここでは\ref{subsec:small-sim}において絞り込みを行ったパラメータを用い,
 京, クラスタそれぞれにおいて実行時間を50, 100, 250, 500, 1000msとして6回シミュレーションを行いその実行時間の平均をとることで,
 より詳細にパラメータの比較を行った.
-尚, SIMD化については\ref{subsec:small-sim}について既にSIMD化を行わないパラメータは除外されているためここでは触れない.\\
+尚, SIMD化については\ref{subsec:small-sim}について既にSIMD化を行わないパラメータは除外されているためここでは触れない.
+また, 京においてはMPIプロセス数に関しても除外されているため同様な扱いとする.\\
 
 \subsubsection{MPIプロセス数}
 \paragraph{クラスタ}~\\
@@ -194,18 +195,6 @@ y軸は実行時間を示している.\\
 \end{center}
 \end{figure}
 \clearpage
-
-\paragraph{京}~\\
-% \begin{figure}[htb]
-% % h:here, t:top, b:bottom, p:page
-% \begin{center}
-% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
-%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
-%     \label{fig:cluster-bench-adjusted-final}
-% \end{center}
-% \end{figure}
-% \clearpage
 
 \subsubsection{OpenMPスレッド数}
 \paragraph{クラスタ}~\\
@@ -233,25 +222,23 @@ OpenMPスレッドについては他のパラメータと違いスレッド数�
     \label{fig:cluster-openmp-top50}
 \end{center}
 \end{figure}
-
+\clearpage
 結果として, データ点を制限して表示した図においてもスレッド数と実行時間の直接的な相関を見ることができなかった.
 これは\ref{subsubsec:hybrid}において述べたMPIとOpenMPのハイブリッドという観点では,
 シミュレーションの規模が小さくMPIプロセスが通信に用いるリソースが十分に存在したため,
 MPIによってコアを埋めた後ではOpenMPのスレッド数をいくつに設定しても実行時間に与える影響が少ないためだと考えられる.\\
-\clearpage
-
 \paragraph{京}~\\
-% \begin{figure}[htb]
-% % h:here, t:top, b:bottom, p:page
-% \begin{center}
-% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
-%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
-%     \label{fig:cluster-bench-adjusted-final}
-% \end{center}
-% \end{figure}
-% \clearpage
-
+クラスタ同様京においてもOpenMPスレッド数と実行時間の直接的な相関を見ることはできなかった.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/k-OpenMP-thread.pdf}
+    \caption{京 OpenMPスレッド数 シミュレーション結果}
+    \label{fig:k-openmp}
+\end{center}
+\end{figure}
+\clearpage
 \subsubsection{配列のくくり出し}
 \paragraph{クラスタ}~\\
 変数の配列化を通してコンパイラによるSIMD化を促進することで計算能力が大きく向上することは,
@@ -283,13 +270,17 @@ MPIによってコアを埋めた後ではOpenMPのスレッド数をいくつ�
 本論文執筆時においての実装では実行時間への影響は少ないことがわかる.\\
 
 \paragraph{京}~\\
-% \begin{figure}[htb]
-% % h:here, t:top, b:bottom, p:page
-% \begin{center}
-% %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
-%     \includegraphics[width=14cm]{./images/cluster-bench-adjusted-final.pdf}
-%     \caption{クラスタ 小規模シミュレーション結果 パラメータ絞り込み後}
-%     \label{fig:cluster-bench-adjusted-final}
-% \end{center}
-% \end{figure}
-% \clearpage
+一方で, 京環境においてはクラスタ環境と比べ図\ref{fig:k-roa}にあるように,
+配列のくくり出しを行う場合と行わない場合で実行時間の差はより小さくなっている.\\
+このことから京環境においてはデフォルトのコンパイラの性能がGCCと比べて高く,
+くくり出しの有無にかかわらず十分な最適化がなさているのではないかと考えられる.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+\begin{center}
+%    \includegraphics[width=18.0cm]{./images/Genie.pdf}
+    \includegraphics[width=14cm]{./images/k-SIMD-and-RoA.pdf}
+    \caption{京 配列のくくり出し シミュレーション結果}
+    \label{fig:k-roa}
+\end{center}
+\end{figure}
+\clearpage

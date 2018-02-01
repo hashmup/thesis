@@ -6,7 +6,7 @@
 モデルに依存するパラメータに関しては先行研究\cite{miyamoto-master}においてSIMD化, 配列構造の最適化により計算速度が大きく向上することが示されているため,
 その二つに加え配列構造の順序を入れ替えることによってキャッシュヒット率の向上に取り組んだ.\\
 Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記述されている.\\
-{\footnotesize
+{\scriptsize
 \lstinputlisting[caption=hh.mod,label=mod-hh,frame=single]{src/mod/hh.mod}
 }
 先行研究の中でも示されている通り,この計算式の中で多くの計算時間を必要とするのはDERIVATIVEであり,

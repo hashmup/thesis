@@ -15,7 +15,7 @@
 %  \begin{left}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
     \includegraphics[width=1.1\textwidth]{./images/Genie.pdf}
-    \caption{Genieの全体像}
+    \caption{シミュレータの全体像}
     \label{fig:simulator-image}
 %  \end{left}
 \end{figure}~\\
@@ -28,17 +28,23 @@
 一時的に必要なディレクトリのコピーを作成するといったシミュレーションを行うために必要な
 準備をはじめに行う.\\
 具体的には次に示すディレクトリを作成・初期化する.\\
+\begin{table}[htb]
+  \caption {作成されるディレクトリ}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=作成されるディレクトリ]
-genie/ : topディレクトリ
-  |-- tmp/ : 実行結果, ログを保持するためのディレクトリ
-  |-- neuron_kplus/
-        |-- exec/ : 実行形式を保持するためのディレクトリ
-        |-- exec.tmp/ : 並行ビルドのための exec のコピーディレクトリ
-        |-- nrn-7.2.tmp/ : 並行ビルドのための nrn-7.2 のコピーディレクトリ
-        |-- specials.tmp/ : 並行ビルドのための specials のコピーディレクトリ
-\end{lstlisting}
+\begin{framed}
+\begin{verbatim}
+  genie/ : rootディレクトリ
+    |-- tmp/ : 実行結果, ログを保持するためのディレクトリ
+    |-- neuron_kplus/
+          |-- exec/ : 実行形式を保持するためのディレクトリ
+          |-- exec.tmp/ : 並行ビルドのための exec のコピーディレクトリ
+          |-- nrn-7.2.tmp/ : 並行ビルドのための nrn-7.2 のコピーディレクトリ
+          |-- specials.tmp/ : 並行ビルドのための specials のコピーディレクトリ
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\\
 この中で, 末尾に.tmpがつくディレクトリは並行してキューイングシステムにジョブをサブミットする際に
 レファレンスが衝突しないようにするために必要となる.\\
 NEURONのシミュレーションはキューシステムにサブミットされたのち,順番が来るまでキューで待機状態にある.\\
@@ -60,8 +66,10 @@ configファイルでは, 実行形式の生成に関わるパラメータ（コ
 分けて定義している.\\
 また, それぞれの環境に対して特有のパラメータについてはbuild\_config\_マシン名やjob\_マシン名というように,
 末尾に実行マシンの名前をつけることで区別している.\\
+\begin{table}[htb]
+  \caption{クラスタに対するconfigファイル}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=クラスタに対するconfigファイル]
+\begin{lstlisting}[frame=single]
 {
     # 実行形式の生成に関わるパラメータ
     "build" : {
@@ -120,11 +128,15 @@ configファイルでは, 実行形式の生成に関わるパラメータ（コ
 }
 \end{lstlisting}
 }
-
+\end{table}
+\clearpage
 configファイル内でパラメータの範囲を定義する際, 数字の場合はカンマで区切って範囲を定義する.
 OpenMPのスレッド数を例にすると定義方法は3種類あり, それぞれ次に示すように解釈される.\\
+\begin{table}[htb]
+  \caption {数値パラメータの定義}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=数値パラメータの定義]
+\begin{framed}
+\begin{verbatim}
 # OpenMPのスレッド数
 # パラメータ: "start, end"
 "omp_num_threads": "2, 8"
@@ -137,18 +149,26 @@ OpenMPのスレッド数を例にすると定義方法は3種類あり, それ�
 # パラメータ: "[parameters]"
 "omp_num_threads": "[2, 4, 16]"
 # => [2, 4, 16]
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\\
 
 文字列の候補を複数定義する場合は,
 候補を[]でくくることでその中でカンマで区切られた文字列すべてを候補とすることができる.
+\begin{table}[htb]
+  \caption {文字列パラメータの定義}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=文字列パラメータの定義]
+\begin{framed}
+\begin{verbatim}
 # 利用するコンパイラを定義する
 "CC":"[mpicc, mpiicc]"
-
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\\
 \subsubsection{MODファイルをパースし抽象木を生成する}
 \label{sec:simulator-mod-parse}
 MODファイルのパースし抽象木を生成するにあたり, PythonのライブラリであるtextX\cite{textX-repo}を利用した.\\
@@ -160,8 +180,6 @@ Pythonのライブラリである.
 pynmodlはNeuroMLを開発しているチームの中で本論文を執筆時において開発中のライブラリであり
 MODファイルから抽象木を取り出すためのメタモデルのみ実装されている段階であったため,
 MODファイルからtextX形式の抽象木を生成するプログラムとして利用した.\\
-
-( TODO: 例を加える)
 
 \subsubsection{パラメータ候補群の生成}
 \ref{sec:simulator-config-parse}と\ref{sec:simulator-mod-parse}で生成したパラメータ群がシミュレータで探索する対象となる.\\
@@ -176,7 +194,7 @@ MODファイルからtextX形式の抽象木を生成するプログラムとし
 ジョブスクリプトの生成に関わるパラメータを内側にすることで, ジョブの完了を待っている間に必要がある場合は次の実行形式をビルドする
 ことができる.\\
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=パラメータ候補の生成　疑似コード]
+\begin{lstlisting}[caption=パラメータ候補の生成　疑似コード,frame=single]
 # 未実行のシミュレーションのパラメータを保持する配列
 pending_sims = []
 
@@ -211,7 +229,7 @@ for compile_param in compile_params {
 スレッドを生成したのちにわずかな時間スリープさせることにした.\\
 
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブ実行スレッドを生成するループ　疑似コード]
+\begin{lstlisting}[caption=ジョブ実行スレッドを生成するループ　疑似コード,frame=single]
 MAX_NUM_JOBS = 4
 run() {
     # キューイングシステムのジョブ実行状況を監視するメソッドを別スレッドで生成
@@ -249,7 +267,7 @@ mutexロックをかけた上で, 今回利用するパラメータの取得（p
 ジョブIDとパラメータを紐付けることで, そのジョブが完了した際にジョブIDを通して実行時間とパラメータを関連づけることができるようになる.\\
 
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブサブミットの前後処理　疑似コード]
+\begin{lstlisting}[caption=ジョブサブミットの前後処理　疑似コード,frame=single]
 # 実行中のジョブの状態を保持したテーブルでジョブの完了を判断するために利用する
 # running_jobs[job_id] が 0 の場合は, job_id が pjstat や qstat の出力に一度も現れていない状態
 # 1 の場合は, job_id が pjstat や qstat の出力に一度は現れている状態
@@ -308,14 +326,14 @@ deploy_job() {
 そのShell Scriptに引数として一時ディレクトリを使用するか否か, 何番目のジョブかといった情報を与えることで行った.\\
 
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=パラメータ候補群に対するシミュレーション3　疑似コード]
+\begin{lstlisting}[caption=ジョブのサブミット 疑似コード, frame=single]
 
 deploy(shouldBuild, compile_param, code_optimize_param, job_param) {
     # 一時ディレクトリを利用するかという情報を退避する
     _use_tmp = use_tmp
 
     # 実行形式を再度生成する必要がある場合
-    if shouldBuild:
+    if shouldBuild {
         # 現在利用しているディレクトリは使えないため, ディレクトリのフラグを切り替える
         use_tmp = not use_tmp
 
@@ -328,7 +346,7 @@ deploy(shouldBuild, compile_param, code_optimize_param, job_param) {
         # コンパイルに関わるパラメータと実行形式を生成するディレクトリの情報を用いて
         # NEURONの実行形式を生成する
         build(compile_param, _use_tmp)
-    else:
+    } else {
         # ジョブスクリプトへのリファレンスの衝突を防ぐため,何番目のジョブかという情報を保持する
         job_cnt += 1
 
@@ -339,6 +357,7 @@ deploy(shouldBuild, compile_param, code_optimize_param, job_param) {
                         job_cnt,
                         _use_tmp)
         return job_id
+    }
 }
 \end{lstlisting}
 }
@@ -350,7 +369,7 @@ deploy(shouldBuild, compile_param, code_optimize_param, job_param) {
 \item 実行形式を生成するパス（一時ディレクトリを用いるかオリジナルのディレクトリを用いるかを決定するため, ".tmp"または""が与えられる）
 \end{enumerate}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=実行形式のビルドスクリプト]
+\begin{lstlisting}[caption=実行形式のビルドスクリプト, frame=single]
 #!/bin/bash -x
 
 ARCH=$1
@@ -379,7 +398,7 @@ fi
 ジョブのサブミットに際しては, ジョブの番号を与えることで一意にジョブスクリプトを指定することができるため,
 ジョブの番号を引数として与える.\\
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブのサブミットスクリプト]
+\begin{lstlisting}[caption=ジョブのサブミットスクリプト, frame=single]
 #!/bin/bash -x
 qsub ../../genie/simulator/tmp/job$1.sh
 \end{lstlisting}
@@ -407,7 +426,7 @@ qsub ../../genie/simulator/tmp/job$1.sh
 また, 未実行のシミュレーションがなくなり, 現在実行中のジョブがすべて完了した段階でパラメータ候補すべてに対してシミュレーションをし終えたといえるため
 ジョブ結果が最適化を通して変わっていないかの確認とパラメータと実行時間を保持したテーブルのCSV形式での書き出しを行いシミュレータを終了する.\\
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブ実行の監視と後処理　疑似コード]
+\begin{lstlisting}[caption=ジョブ実行の監視と後処理　疑似コード, frame=single]
 watch_job() {
     # 実行中のジョブすべてに対して, ジョブが完了しているかの確認を行う
     for job_id in running_jobs {
@@ -455,7 +474,7 @@ watch_job() {
 取得できなかった場合はキューイングシステム上にジョブが存在しなくなった段階でそのジョブは完了しているとみなすことができる.\\
 
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブ完了判定　疑似コード]
+\begin{lstlisting}[caption=ジョブ完了判定　疑似コード, frame=single]
 # qstat の出力に対してジョブ ID とジョブの実行状況を取得するための正規表現
 job_cluster_exp = re.compile(
     "(?P<id>\d+).\w+\s+\w+.\w+\s+\w+\s+\d+:\d+:\d+\s+(?P<state>\w+)\s+\w+\s+")
@@ -531,7 +550,7 @@ is_job_still_running(job_id) {
 また, 結果として出力される内容の中で実行時間を出力している行は複数のプロセスやスレッドで並行的に計算をしているため順番は前後するものの
 同一のフォーマットに従うため, すべての行の中からこのフォーマットに合致する行を探すことで実行時間を取得することができる.\\
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ジョブ結果の集約　疑似コード]
+\begin{lstlisting}[caption=ジョブ結果の集約　疑似コード, frame=single]
 # シミュレーション結果のファイルの中で実行時間を取得するための正規表現
 time_exp = re.compile(
     "\s+\* core time : (?P<decimal>\d+).(?P<float>\d+) sec\s+")

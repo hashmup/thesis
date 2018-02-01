@@ -30,7 +30,6 @@ Hodgkin-Huxleyモデルでは, 各イオンに対するニューロンの細胞�
     \label{fig:hh-circuit}
  \end{center}
 \end{figure}
-\clearpage
 $\overline{g}_i$は$g_i$の最大値であり, $m, h \in (0, 1)$はそれぞれ活性化パラメータ, 不活性化パラメータと呼ばれる無次元数である.\\
 また, x, yはそれぞれ実験データを元に求められる整数である.\\
 活性化パラメータ, 不活性化パラメータであるm, hはさらにそれぞれ次の微分方程式（式2.6から式2.12）で表現される.\\
@@ -69,11 +68,10 @@ n番目のコンパートメントの親となるコンパートメントを$n_{
 \end{eqnarray}
 と表される. 尚, $I^{i, j}$はi番目のコンパートメントからj番目のコンパートメントに流れる電流を表す.
 
-（ TODO : 図の差し替え）
 \begin{figure}[htb]
  \begin{center}
     \includegraphics[width=10cm]{./images/multi-compartment.pdf}
-    \caption{マルチコンパートメントモデル (Yusuke Mori. Developing implementations of the estimation of synaptic positions and the communication procedure between simulation and real environment toward whole insect brain simulation. Master's thesis, the university of Tokyo, 2014. より引用)}
+    \caption[マルチコンパートメントモデル]{マルチコンパートメントモデル (Yusuke Mori. Developing implementations of the estimation of synaptic positions and the communication procedure between simulation and real environment toward whole insect brain simulation. Master's thesis, the university of Tokyo, 2014\cite{mori-master}. より引用)}
     \label{fig:multi-compartment}
  \end{center}
 \end{figure}

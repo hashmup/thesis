@@ -8,8 +8,11 @@
 この方法を用いることで, 実行する計算機によってソフトウェアを変更する必要はなくなったが,
 実行するための環境を構築する手間がかかるため,以下に示す環境構築スクリプトを作成した.\\
 またMakefileを作成し, makeコマンドから環境構築のスクリプトの呼び出しやシミュレーションの実行を行うようにした.\\
+\begin{table}[htb]
+  \caption {環境設定に利用するmakeコマンド}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=利用するmakeコマンド]
+\begin{framed}
+\begin{verbatim}
 # 環境構築を行うコマンド
 # scripts/setup_env_and_install_libraries.sh を実行する
 make install
@@ -26,20 +29,30 @@ make run
 
 # ファイル名で指定した MOD ファイルを C 言語のファイルに変換する
 make compile "ファイル名"
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
-
+\end{table}
+\\
+\begin{table}[htb]
+  \caption {環境構築スクリプトのフォルダ構成}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=環境構築スクリプトのフォルダ構成]
-Makefile
-scripts/
-   |--- setup_env_and_install_libraries.sh
-   |--- pull_required_projects.sh
-\end{lstlisting}
+\begin{framed}
+\begin{verbatim}
+  Makefile
+  scripts/
+     |--- setup_env_and_install_libraries.sh
+     |--- pull_required_projects.sh
+\end{verbatim}
+\end{framed}
 }
-
+\end{table}
+\\
+\begin{table}[htb]
+  \caption {必要なライブラリ}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=必要なライブラリ]
+\begin{framed}
+\begin{verbatim}
 Python
     pandas: シミュレータでパラメータやそれぞれのパラメータに対応する結果を保持するデータ管理ライブラリ
     textX: トランスパイラで MOD ファイルから抽象木を生成する際に利用するメタ言語を作成するためのライブラリ
@@ -47,8 +60,11 @@ Python
 
 NEURON
     neuron_kplus: 宮本らの先行研究によって追加実装された NEURON 本体と, そのインストールスクリプト等を含んだソース群
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\\
 
 {\footnotesize
 \lstinputlisting[caption=setup\_env\_and\_install\_libraries.sh,label=setup_env,frame=single]{src/script/setup_env_and_install_libraries.sh}

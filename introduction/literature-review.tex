@@ -37,8 +37,8 @@ C言語ファイルに変換され実行形式が生成される. しかしな�
 \item makeSynapse(X, Y) : シナプス前末端を細胞X, シナプス後末端を細胞Yに作成し接続する
 \end{itemize}
 とし, 細胞内でのシナプスの位置はランダムとした.\\
-
-\begin{figure}[htb]
+\clearpage
+\begin{figure}[h]
 % h:here, t:top, b:bottom, p:page
  \begin{center}
 %    \includegraphics[width=18.0cm]{./images/Genie.pdf}
@@ -50,32 +50,47 @@ C言語ファイルに変換され実行形式が生成される. しかしな�
 
 \paragraph{リングネットワーク}~\\
 隣り合った細胞同士でシナプスを作成する.
+\begin{table}[htb]
+\caption {リングネットワークの作成}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=リングネットワークの作成]
+\begin{framed}
+\begin{verbatim}
 for (int i=0; i<NCELL; i++) {
     for (int j=0; j<NSYNAPSE; j++) {
         makeSynapse(i, i+1 mod NCELL);
     }
 }
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
-\paragraph{ランダムワーク}~\\
+\end{table}
+\vspace{5cm}
+\paragraph{ランダムネットワーク}~\\
 シナプスの前末端はリングネットワークと同様で, シナプスの後末端の位置がランダムなネットワーク.
+\begin{table}[htb]
+\caption {ランダムネットワークの作成}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=ランダムネットワークの作成]
+\begin{framed}
+\begin{verbatim}
 for (int i=0; i<NCELL; i++) {
     for (int j=0; j<NSYNAPSE; j++) {
         makeSynapse(i, (i+RND) mod NCELL);
     }
 }
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
-\paragraph{Watts and Strogatzワーク}~\\
+\end{table}
+\paragraph{Watts and Strogatzネットワーク}~\\
 実際の神経回路ネットワークは, リングでも完全なランダムでもないと考えられる.
 そこで, それら2つのネットワークの中間的なネットワークに位置付けられるWatts and Strogatzネットワークについてもベンチマークの対象としていた.
 Watts and Strogatzネットワークは, リングネットワークを作成した後, 確率 p $<$ 1で後末端をランダムに繋ぎかえるものである.
+
+\begin{table}[htb]
+\caption {Watts and Strogatzネットワークの作成}
 {\footnotesize
-\begin{lstlisting}[numbers=none, caption=Watts and Strogatzネットワークの作成]
+\begin{framed}
+\begin{verbatim}
 P = NSYNAPSE * p;
 for (int i=0; i<NCELL; i++) {
     for (int j=0; j<P; j++) {
@@ -85,5 +100,8 @@ for (int i=0; i<NCELL; i++) {
         makeSynapse(i, i+1 mod NCELL);
     }
 }
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\vspace{1cm}

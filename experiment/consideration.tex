@@ -25,6 +25,14 @@ MPIプロセスによってコアを占有することでスレッド生成の�
 ゆえに, より多くのパラメータ候補を試行することがそれぞれの最適化アルゴリズムを有効利用するためには必要であり,
 ハイブリッド並列化と同様にパラメータ推定の過程そのものを効率化することが詳細な最適化を行う上で必要となると考えられる.\\
 
+\subsection{シミュレーションの規模とパラメータの関係}
+一方で, シミュレーション時間100msで行った小規模なシミュレーションにおける各パラメータとシミュレーション時間1000msで行った場合を比較すると,
+本研究で用いたパラメータについてはどのパラメータにおいても一定の相関が見られることがわかる.
+このことから, 規模を大きくすることで特定のリソースを使い切ってしまうパラメータでないならば小規模のシミュレーションから最適なパラメータ推定を十分に行えると考えられる.\\
+さらに, リソースに関連するパラメータは実行マシンに関わるパラメータであるため,
+この事実を利用することでパラメータの候補を実行マシンに関与するパラメータとモデルに関与するパラメータに2分し別々に最適化を行うことも可能であり,
+組み合わせによって膨大となっているパラメータ候補数を減らすことが可能であると考えられる.\\
+
 \subsection{自動最適化の評価}
 自動最適化の評価は表\ref{table:sim-cond}に示した条件で行った.\\
 \begin{table}[htb]
@@ -36,8 +44,7 @@ MPIプロセスによってコアを占有することでスレッド生成の�
       パラメータ & 値の範囲\\ \hline
       シミュレーション時間 & 1000\\ \hline
       神経細胞数 & 256\\ \hline
-      ネットワーク & リングネットワーク, ランダムネトワーク\\
-                 & Watts and Strogatzネットワーク\\ \hline
+      ネットワーク & Watts and Strogatzネットワーク\\ \hline
       試行回数 & 10回 \\ \hline
     \end{tabular}
     \label{table:sim-cond}
@@ -48,7 +55,6 @@ MPIプロセスによってコアを占有することでスレッド生成の�
 また自動最適化の結果として用いたパラメータは,
 \ref{subsec:detail-sim}においてシミュレーション時間1000msで行ったシミュレーションの内,
 平均の実行時間がもっとも短いパラメータの組を用いる.\\
-（ TODO: openmpの値を更新する）
 \begin{table}[htb]
   \caption {自動最適化パラメータ}
   \begin{center}
@@ -56,10 +62,70 @@ MPIプロセスによってコアを占有することでスレッド生成の�
       \hline
       パラメータ & クラスタでの値 & 京での値\\ \hline
       MPIプロセス数 & 26 & 8\\ \hline
-      OpenMPスレッド数 & 10 & 10\\ \hline
+      OpenMPスレッド数 & 2 & 11\\ \hline
       SIMD化 & 行う & 行う\\ \hline
-      配列のくくり出し & 行わない & 行わない \\ \hline
+      配列のくくり出し & 行わない & 行う \\ \hline
     \end{tabular}
     \label{table:auto-tuned-param}
   \end{center}
 \end{table}
+\\
+また, 比較対象として次の条件でシミュレーションを行った.\\
+\begin{itemize}
+\item 自動最適化を行ったNEURON
+\item デフォルトの状態のNEURON
+\item MPIプロセス数とOpenMPスレッド数の最適化結果を用いたNEURON
+\item ICCを用いてコンパイルを行ったNEURON（クラスタのみ）
+\item 手動での最適化を行ったNEURON（選考結果\cite{miyamoto-master}を利用）
+\end{itemize}
+尚, デフォルトの状態はMPIプロセス数がCPUの数（クラスタでは2, 京では1）であり,
+OpenMPスレッド数は各CPUのコア数（クラスタでは14, 京では8）として定義した.\\
+\subsubsection{クラスタ}~\\
+10回のシミュレーションを行う上で, 平均だけでなく各シミュレーションごとの誤差を見るため,
+図\ref{fig:cluster-compare}に示すように箱ひげ図を用いてグラフ化した.\\
+図\ref{fig:cluster-compare}において, デフォルトの設定は実行時間に幅はあるものの多くの場合5000sを超える実行時間がかかっていることがわかる.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+ \begin{center}
+    \includegraphics[width=14cm]{./images/cluster-compare.pdf}
+    \caption{クラスタ 自動最適化評価}
+    \label{fig:cluster-compare}
+  \end{center}
+\end{figure}~\\
+次にデフォルトを除いた他の4つの条件のみを図\ref{fig:cluster-compare-2}に示す.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+ \begin{center}
+    \includegraphics[width=14cm]{./images/cluster-compare-2.pdf}
+    \caption{クラスタ 自動最適化評価 （デフォルト以外）}
+    \label{fig:cluster-compare-2}
+  \end{center}
+\end{figure}~\\
+この図から, 自動最適化を行ったものは手動での最適化と比べ多少劣るものの,
+マシンパラメータのみの最適化を行ったものや最適化に非常に優れたコンパイラであるiccを用いたもの比較しても
+十分に高速化されているといえる.\\
+\subsubsection{京}~\\
+同様にして京においての比較結果を図\ref{fig:k-compare}に示す.
+クラスタの結果と比べ特徴的なのは, 個々のシミュレーションの実行時間にばらつきがないことで
+これは京においてログインノードと計算用のノードが分離されているため, シミュレーションが別プロセスの影響を受けにくいからであると考えられる.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+ \begin{center}
+    \includegraphics[width=14cm]{./images/k-compare.pdf}
+    \caption{京 自動最適化評価}
+    \label{fig:k-compare}
+  \end{center}
+\end{figure}~\\
+
+最後に自動最適化と手動最適化のみを比較したものを図\ref{fig:k-compare-2}に示す.\\
+先行研究で行われた手動最適化は, この京環境に対して行われていたためクラスタでの実行よりも顕著に差が現れている.
+しかしながらその差は全体の1割にもみたないため, 自動最適化によるシミュレーションの高速化は京環境においても十分な効果を発揮したといえる.\\
+さらに, 最適化アルゴリズムの追加やベンチマークなどの改良を行うことでこの差を埋めることも可能であると考える.\\
+\begin{figure}[htb]
+% h:here, t:top, b:bottom, p:page
+ \begin{center}
+    \includegraphics[width=14cm]{./images/k-compare-2.pdf}
+    \caption{京 自動最適化評価（自動 vs 手動）}
+    \label{fig:k-compare-2}
+  \end{center}
+\end{figure}~\\

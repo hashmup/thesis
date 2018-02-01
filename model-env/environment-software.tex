@@ -1,6 +1,6 @@
 \subsection{シミュレータ}
 \label{subsec:neuron}
-NEURONは,Yale大学のHinesらによって開発されている神経回路・細胞シミュレーションソフトウェアであり,
+NEURONは,Yale大学のHinesらによって開発されている神経回路・細胞シミュレーションソフトウェアであり\cite{NEURON},
 神経回路シミュレーションにおいて標準の一つとなっており,先行研究としてあげた宮本らによる
 手動での高速化においても対象となったソフトウェアである.　そのため,本研究の目的である神経回路シミュレーションの自動最適化の
 対象としてNEURONを採用した. また,京やクラスタといった複数の計算機上で安定して稼働させるためにNEURONのバージョンは7.2を選択した.\\
@@ -30,15 +30,21 @@ NEURON本体がリンクされることによってNEURONの実行形式が作�
 
 \subsubsection{NEURONのコンパイル}
 \paragraph{クラスタ上でのコンパイル}~\\
-クラスタのようなx86の大規模計算機では,
+クラスタのようなx86の大規模計算機では,\\
+\begin{table}[!ht]
+  \caption {クラスタでのNEURONのコンパイル}
 {\footnotesize
-\begin{lstlisting}[caption=クラスタでのNEURONのコンパイル,label=cluster-neuron-compile,numbers=none]
-$ ./configure --prefix=`pwd`\
-              --without-iv --without-x --without-nrnoc-x11
-$ make
-$ make install
-\end{lstlisting}
+\begin{framed}
+\begin{verbatim}
+  $ ./configure --prefix=`pwd`\
+                --without-iv --without-x --without-nrnoc-x11
+  $ make
+  $ make install
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+\\
 とすることで計算シミュレータとしてのNEURONをコンパイルし,実行形式を得ることができる.
 デフォルトのコンパイルオプションではNEURONはGUI関係のライブラリもリンクするが,大規模計算機環境上では必要ないためオプションを渡すことで
 コンパイル対象から除外している.\\
@@ -56,21 +62,31 @@ NEURONのコンパイルは内部的には,
 ネイティブコンパイルで,2,3,4についてはクロスコンパイルで行う必要がある.\\
 またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する.（\cite{miyamoto-master}より引用）\\
 \subparagraph{nmodlのコンパイル}~\\
+\begin{table}[htb]
+  \caption {京でのnmodlのコンパイル}
 {\footnotesize
-\begin{lstlisting}[caption=京でのnmodlのコンパイル,label=k-nmodl-compile,numbers=none]
+\begin{framed}
+\begin{verbatim}
 $ ./configure --prefix=`pwd`\
               --without-iv --without-x --without-nrnoc-x11\
               --with-nmodl-only linux_nrnmech=no\
               CC=gcc CXX=g++
 $ make
 $ make install
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
+
 \subparagraph{NEURONのクロスコンパイル}~\\
 NEURON本体をクロスコンパイルする前に, 上述したnmodlのコンパイルで生成した実行形式をPATHの通っているディレクトリに
 移動させておく必要がある. nmodlを退避させたのち,下記のコマンドを実行することでNEURON本体の実行形式が生成される
+
+\begin{table}[htb]
+  \caption {京でのNEURON本体のコンパイル}
 {\footnotesize
-\begin{lstlisting}[caption=京でのNEURON本体のコンパイル,label=k-neuron-compile,numbers=none]
+\begin{framed}
+\begin{verbatim}
 $ make clean
 $ ./configure --prefix=`pwd`\
               --without-x --without-nmodl\
@@ -82,5 +98,7 @@ $ ./configure --prefix=`pwd`\
               CC=mpifccpx CXX=mpiFCCpx MPICC=mpifccpx MPICXX=mpiFCCpx
 $ make
 $ make install
-\end{lstlisting}
+\end{verbatim}
+\end{framed}
 }
+\end{table}
