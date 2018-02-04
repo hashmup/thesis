@@ -1,0 +1,66 @@
+\section*{附録A}
+\addcontentsline{toc}{section}{附録A}
+\subsection*{最適化パラメータとしての配列のくくり出しの評価}
+\addcontentsline{toc}{subsection}{最適化パラメータとしての配列のくくり出しの評価}
+本論において, 最適化パラメータとしてあげた配列のくくり出しは, くくり出しを行うか行わないかという2通りの組合わせのみで用いられていた.\\
+　これは全体のシミュレーション時間を減らすためであったが, 配列のくくり出しは本来SIMD化とのハイブリッドで用いることが望ましく, グルーピングされた変数群を個々にくくり出すか否かを選択するべきである.\\
+　そのため附録として, \ref{subsec:compare}の自動最適化の条件の上でクラスタ環境において個々の変数群に対してくくり出しを行うことで配列のくくり出しの効果を評価する.\\
+
+  神経細胞モデルとして利用したhh.modの中でくくり出しを行う計算式を次に示す.\\
+\begin{table}[htb]
+\begin{center}
+\title {配列のくくり出しの対象とする式}
+{\footnotesize
+\begin{framed}
+\begin{verbatim}
+BREAKPOINT {
+  gna = gnabar * m * m * m * h
+  ina = gna * (v - ena)
+  gk = gkbar * n * n * n * n
+  ik = gk * (v - ek)
+  il = gl * (v - el)
+}
+
+DERIVATIVE states {
+  m' = (minf - m) / mtau
+  h' = (hinf - h) / htau
+  n' = (ninf - n) / ntau
+}
+\end{verbatim}
+\end{framed}
+}
+\end{center}
+\end{table}~\\
+
+　これらの計算式に対し\ref{subsubsec:soa}項で述べたUnion-Find木を用いたアルゴリズムを適用すると,\\
+\begin{enumerate}
+  \item v, il, gl, el
+  \item h, m, gna, gnabar, ina, ena
+  \item ek, gk, gkbar, ik, n
+\end{enumerate}~\\
+　という3つのグループに変数を分類することができる.　$2^3$通りの組み合わせが考えらるため, それぞれの組み合わせに表\ref{table:merge-array-pattern}のように名前をつける.\\
+　また, この中でパターンAは\ref{subsec:compare}節において配列のくくり出しを行わなかった場合, Hは配列のくくり出しを行った場合に該当する.\\
+\begin{table}[htb]
+  \caption {配列のくくり出しパターン hh.mod}
+  \begin{center}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+      \hline
+      パターン & グループ1 & グループ2 & グループ3\\ \hline
+      A & × & × & ×\\ \hline
+      B & ○ & × & ×\\ \hline
+      C & × & ○ & ×\\ \hline
+      D & × & × & ○\\ \hline
+      E & ○ & ○ & ×\\ \hline
+      F & ○ & × & ○\\ \hline
+      G & × & ○ & ○\\ \hline
+      H & ○ & ○ & ○\\ \hline
+    \end{tabular}
+    \label{table:merge-array-pattern}
+  \end{center}
+\end{table}~\\
+\vspace{10cm}
+　\ref{subsec:compare}節同様に10回のシミュレーションを行った結果を図\ref{table:merge-array-pattern}に示す.\\
+　この図から, 変数のグループ2, 3を配列としてくくりだした際に最も高速化されていることが読み取れ,
+ミディアンを比較すると手動で最適化を行った場合と比べて配列をくくりだした方が高速化されていることがわかる.\\
+
+\clearpage

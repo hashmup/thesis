@@ -1,20 +1,20 @@
 \subsection{シミュレータ}
 \label{subsec:neuron}
-NEURONは,Yale大学のHinesらによって開発されている神経回路・細胞シミュレーションソフトウェアであり\cite{NEURON},
-神経回路シミュレーションにおいて標準の一つとなっており,先行研究としてあげた宮本らによる
+NEURONは,Yale大学のHines\cite{NEURON}らによって開発されている神経回路・細胞シミュレーションソフトウェアであり,
+神経回路シミュレーションにおいて標準の一つとなっており,先行研究としてあげた宮本\cite{miyamoto-master}\cite{miyamoto-master-eng}らによる
 手動での高速化においても対象となったソフトウェアである.　そのため,本研究の目的である神経回路シミュレーションの自動最適化の
 対象としてNEURONを採用した. また,京やクラスタといった複数の計算機上で安定して稼働させるためにNEURONのバージョンは7.2を選択した.\\
 
 \subsubsection{全体構成}
 NEURONでは,MODファイルとHOCファイルと呼ばれる二つのファイルに必要な情報を記述することで神経回路シミュレーションを行っている.\\
-MODファイルはその名のとおり神経細胞のモデルを記述するファイルであり, \ref{subsec:hh-model}で示したHodgkin-Huxleyモデルのように神経細胞を数理モデルとして記述する.\\
+　MODファイルはその名のとおり神経細胞のモデルを記述するファイルであり, \ref{subsec:hh-model}項で示したHodgkin-Huxleyモデルのように神経細胞を数理モデルとして記述する.
 一方でHOCファイルと呼ばれるファイルにはMODファイルで記述された神経細胞モデル間のつながりや,
-シミュレーション時間などシミュレーションそのものに関与する設定を記述する.\\
+シミュレーション時間などシミュレーションそのものに関与する設定を記述する.
 より具体的には,図\ref{fig:neuron}で示したように,nrnivmodlと呼ばれるトランスパイラによってMODファイル（model.mod）は対応するCファイル（model.c）に変換される.
 このCファイルはさらにGCCやICCといったC言語のコンパイラによってオブジェクトファイル（model.o）になり,ここで生成されたオブジェクトファイルと
 NEURON本体がリンクされることによってNEURONの実行形式が作成されることになる.
-そのため,MODファイルとして利用者が作成したモデルは実行時にはNEURONに組み込まれていることとなる.\\
-最終的にこうして生成されたNEURONの実行形式に対してシミュレーションの情報を記述したHOCファイル（simulation.hoc）を渡すことでシミュレーションが実行される.\\
+そのため, MODファイルとして利用者が作成したモデルは実行時にはNEURONに組み込まれていることとなる.\\
+　最終的にこうして生成されたNEURONの実行形式に対してシミュレーションの情報を記述したHOCファイル（simulation.hoc）を渡すことでシミュレーションが実行される.\\
 \clearpage
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
@@ -24,15 +24,17 @@ NEURON本体がリンクされることによってNEURONの実行形式が作�
     \label{fig:neuron}
   \end{center}
 \end{figure}
-宮本らによる先行研究\cite{miyamoto-master}では,主にこのMODファイルからCファイルへの変換に着目し,nrnivmodlによって作成されたCファイルを手動にて
+宮本\cite{miyamoto-master}\cite{miyamoto-master-eng}らによる先行研究では, 主にこのMODファイルからCファイルへの変換に着目し, nrnivmodlによって作成されたCファイルを手動にて
 最適化することでシミュレーション全体の高速化を達成した.\\
-本研究では最適化の手法を踏襲しつつ, nrnivmodlに変わるトランスパイラを作成することで自動での高速化を図る.\\
+　本研究では最適化の手法を踏襲しつつ, nrnivmodlに変わるトランスパイラを作成することで自動での高速化を図る.\\
 
 \subsubsection{NEURONのコンパイル}
 \paragraph{クラスタ上でのコンパイル}~\\
 クラスタのようなx86の大規模計算機では,\\
 \begin{table}[!ht]
-  \caption {クラスタでのNEURONのコンパイル}
+  \begin{center}
+
+  \title{クラスタでのNEURONのコンパイル}
 {\footnotesize
 \begin{framed}
 \begin{verbatim}
@@ -43,14 +45,15 @@ NEURON本体がリンクされることによってNEURONの実行形式が作�
 \end{verbatim}
 \end{framed}
 }
+\end{center}
 \end{table}
 \\
-とすることで計算シミュレータとしてのNEURONをコンパイルし,実行形式を得ることができる.
-デフォルトのコンパイルオプションではNEURONはGUI関係のライブラリもリンクするが,大規模計算機環境上では必要ないためオプションを渡すことで
+とすることで計算シミュレータとしてのNEURONをコンパイルし, 実行形式を得ることができる.
+　また, デフォルトのコンパイルオプションではNEURONはGUI関係のライブラリもリンクするが, 大規模計算機環境上では必要ないためオプションを渡すことで
 コンパイル対象から除外している.\\
 \paragraph{京上でのコンパイル}~\\
-一方で,京ではログインノードと呼ばれるNEURONのコンパイルを行う環境（x86）とプログラムを実行する環境（sparc64）が
-異なるため,クロスコンパイルを行う必要がある.\\
+一方で, 京ではログインノードと呼ばれるNEURONのコンパイルを行う環境（x86）とプログラムを実行する環境（sparc64）が
+異なるため, クロスコンパイルを行う必要がある.\\
 NEURONのコンパイルは内部的には,
 \begin{enumerate}
 \item MODコンパイラ（nmodl）をコンパイルし実行形式を生成
@@ -58,12 +61,12 @@ NEURONのコンパイルは内部的には,
 \item NEURON本体（nrniv, nrnoc）をコンパイルする
 \item 上述の2と3をリンクさせ,実行形式を作成
 \end{enumerate}
-という手順を踏んでいるが,この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため,1について
-ネイティブコンパイルで,2,3,4についてはクロスコンパイルで行う必要がある.\\
-またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する.（\cite{miyamoto-master}より引用）\\
+という手順を踏んでいるが, この中でMODコンパイラ作成についてはログインノード（x86）で実行する必要があるため, 1について
+ネイティブコンパイルで, 2,3,4についてはクロスコンパイルで行う必要がある. またGUI関係のライブラリについてはクラスタ同様京でも必要ないため除外する.（宮本\cite{miyamoto-master}より引用）\\
 \subparagraph{nmodlのコンパイル}~\\
 \begin{table}[htb]
-  \caption {京でのnmodlのコンパイル}
+  \begin{center}
+  \title {京でのnmodlのコンパイル}
 {\footnotesize
 \begin{framed}
 \begin{verbatim}
@@ -76,14 +79,16 @@ $ make install
 \end{verbatim}
 \end{framed}
 }
+\end{center}
 \end{table}
 
 \subparagraph{NEURONのクロスコンパイル}~\\
-NEURON本体をクロスコンパイルする前に, 上述したnmodlのコンパイルで生成した実行形式をPATHの通っているディレクトリに
-移動させておく必要がある. nmodlを退避させたのち,下記のコマンドを実行することでNEURON本体の実行形式が生成される
+　NEURON本体をクロスコンパイルする前に, 上述したnmodlのコンパイルで生成した実行形式をPATHの通っているディレクトリに
+移動させておく必要がある. nmodlを退避させたのち,下記のコマンドを実行することでNEURON本体の実行形式が生成される.\\
 
-\begin{table}[htb]
-  \caption {京でのNEURON本体のコンパイル}
+\begin{table}[h]
+  \begin{center}
+  \title {京でのNEURON本体のコンパイル}
 {\footnotesize
 \begin{framed}
 \begin{verbatim}
@@ -101,4 +106,5 @@ $ make install
 \end{verbatim}
 \end{framed}
 }
-\end{table}
+\end{center}
+\end{table}~\\

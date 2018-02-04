@@ -3,11 +3,12 @@
 実行するPythonのバージョンの制約を受ける.\\
 そのため京に代表されるPython3が存在せず, 管理者権限を持つことができない環境においては,
 管理者権限を必要とせずユーザーの権限の中でPythonのプログラムを実行できる環境を構築する必要がある.\\
-この問題を解決するため, Pyenv\cite{pyenv-repo}というPython専用の仮想環境を構築するライブラリを利用し,
+　この問題を解決するため, Pyenv\cite{pyenv-repo}というPython専用の仮想環境を構築するライブラリを利用し,
 仮想環境上でソフトウェアを実行することにした.\\
-この方法を用いることで, 実行する計算機によってソフトウェアを変更する必要はなくなったが,
-実行するための環境を構築する手間がかかるため,以下に示す環境構築スクリプトを作成した.\\
-またMakefileを作成し, makeコマンドから環境構築のスクリプトの呼び出しやシミュレーションの実行を行うようにした.\\
+　この方法を用いることで, 実行する計算機によってソフトウェアを変更する必要はなくなったが,
+実行するための環境を構築する手間がかかるため,以下に示す環境構築スクリプトを作成した.
+ またMakefileを作成し, makeコマンドから環境構築のスクリプトの呼び出しやシミュレーションの実行を行うようにした.\\
+
 \begin{table}[htb]
   \caption {環境設定に利用するmakeコマンド}
 {\footnotesize
@@ -32,8 +33,8 @@ make compile "ファイル名"
 \end{verbatim}
 \end{framed}
 }
-\end{table}
-\\
+\end{table}~\\
+
 \begin{table}[htb]
   \caption {環境構築スクリプトのフォルダ構成}
 {\footnotesize
@@ -46,8 +47,8 @@ make compile "ファイル名"
 \end{verbatim}
 \end{framed}
 }
-\end{table}
-\\
+\end{table}~\\
+
 \begin{table}[htb]
   \caption {必要なライブラリ}
 {\footnotesize
@@ -63,13 +64,12 @@ NEURON
 \end{verbatim}
 \end{framed}
 }
-\end{table}
-\\
-
+\end{table}~\\
+\vspace{10cm}
 {\footnotesize
-\lstinputlisting[caption=setup\_env\_and\_install\_libraries.sh,label=setup_env,frame=single]{src/script/setup_env_and_install_libraries.sh}
+\lstinputlisting[title=setup\_env\_and\_install\_libraries.sh,label=setup_env,frame=single]{src/script/setup_env_and_install_libraries.sh}
 }
 
 {\footnotesize
-\lstinputlisting[caption=pull\_required\_projects.sh,label=pull_project,frame=single]{src/script/pull_required_projects.sh}
+\lstinputlisting[title=pull\_required\_projects.sh,label=pull_project,frame=single]{src/script/pull_required_projects.sh}
 }

@@ -1,3 +1,4 @@
+\vspace{10cm}
 \subsection{シミュレーション環境}
 \subsubsection{計算機性能}
 本研究で使用した計算機は,スーパーコンピュータ「京」（以下京, 図\ref{fig:k}）と
@@ -16,25 +17,28 @@
 
 \begin{table}[htb]
   \begin{center}
-    \begin{tabular}{|c|p{12cm}|}
+    \caption{京計算ノード構成}
+    \begin{tabular}{|p{4cm}|p{10cm}|}
       \hline
       ピーク演算性能 & 10.62PFLOPS \\ \hline
       メモリ総容量 & 1.26PB（ノードあたり16GB）\\ \hline
       計算ノード間ネットワーク & 6次元メッシュ/トーラス（ユーザービューは3次元トーラス）\\ \hline
       帯域 & 3次元の正負各方向にそれぞれ5GB/s×2（双方向）\\ \hline
     \end{tabular}
-    \caption{京計算ノード構成}
     \label{table:k}
   \end{center}
 \end{table}~\\
+
+\vspace{2cm}
 \begin{table}[ht]
   \begin{center}
-    \begin{tabular}{|l|l|}
+    \caption{京プロセッサ構成}
+    \begin{tabular}{|p{6cm}|p{8cm}|}
       \hline
       CPU性能 & 128GFLOPS（16GFLOPS×8コア）\\ \hline
       コア数 & 8個\\ \hline
-      浮動小数点演算器構成（コアあたり）& 積和演算器: 4（2×2個 SIMD）, （逆数近似命令: SIMD 動作）除算器: 2個 比較器: 2個\\ \cline{1-2}
-      & 浮動小数点レジスタ（64ビット）: 256本 グローバルレジスタ（64ビット）: 188本\\ \cline{1-2}
+      浮動小数点演算器構成（コアあたり）& 積和演算器: 4（2×2個 SIMD）, （逆数近似命令: SIMD 動作）除算器: 2個 比較器: 2個\\
+      & 浮動小数点レジスタ（64ビット）: 256本 グローバルレジスタ（64ビット）: 188本\\ \hline
       キャッシュ構成 & 1次命令キャッシュ: 32KB(2way), 1次データキャッシュ: 32KB(2-way), 2次キャッシュ: 6MB(12-way) コア間共有\\ \hline
       メモリ帯域 & 64GB/s（理論ピーク値）\\ \hline
       動作周波数 & 2GHz \\ \hline
@@ -42,23 +46,25 @@
       トランジスタ数 & 約7億6000万個 \\ \hline
       消費電力 & 58W（プロセス条件TYP）\\ \hline
     \end{tabular}
-    \caption{京プロセッサ構成}
     \label{table:k-processor}
   \end{center}
 \end{table}~\\
-\vspace{-1cm}
-\begin{figure}[htb]
+\clearpage
+
+\begin{figure}[h]
 % h:here, t:top, b:bottom, p:page
   \begin{center}
     \includegraphics[width=8.0cm]{./images/cluster.pdf}
-    \caption{研究室クラスタ}
-    \label{fig:cluster}
+  \vspace*{-15mm}
+  \caption{研究室クラスタ}
   \end{center}
+  \label{fig:cluster}
 \end{figure}~\\
-\clearpage
-\begin{table}[htb]
+
+\begin{table}[hb]
+  \caption{クラスタ性能}
   \begin{center}
-    \begin{tabular}{|c|p{12cm}|}
+    \begin{tabular}{|p{4cm}|p{10cm}|}
       \hline
       CPU性能 & 268\.8 GFLOPS（19.2GFLOPS×14コア）\\ \hline
       コア数 & 14コア \\ \hline
@@ -67,10 +73,11 @@
       動作周波数 & 2.4GHz \\ \hline
       消費電力 & 120W\\ \hline
     \end{tabular}
-    \caption{クラスタ性能}
     \label{table:cluster}
   \end{center}
 \end{table}~\\
+
+\clearpage
 \subsubsection{ジョブ実行環境}
 \label{subsec:job-env}
 京に代表される大型コンピュータの場合,複数の利用者が共同で利用することが基本となる. そのため各個人が

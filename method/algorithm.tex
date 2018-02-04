@@ -1,15 +1,14 @@
 \label{sec:algorithm}
 本研究では,モデルに依存するパラメータと実行マシンに依存するパラメータ,そしてプログラムのコンパイル時に関わるパラメータ（コンパイルオプション）を調節することでシミュレーション系の最適化を目指した.\\
-以下にそれぞれのパラメータの詳細を示す.\\
+　以下にそれぞれのパラメータの詳細を示す.\\
 \subsection{モデルに依存するパラメータ}
-以下にHodgkin-Huxley方程式のモデルを例としてそれぞれのパラメータを示す.\\
-モデルに依存するパラメータに関しては先行研究\cite{miyamoto-master}においてSIMD化, 配列構造の最適化により計算速度が大きく向上することが示されているため,
+以下にHodgkin-Huxley方程式のモデルを例としてそれぞれのパラメータを示す. モデルに依存するパラメータに関しては先行研究\cite{miyamoto-master}においてSIMD化, 配列構造の最適化により計算速度が大きく向上することが示されているため,
 その二つに加え配列構造の順序を入れ替えることによってキャッシュヒット率の向上に取り組んだ.\\
-Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記述されている.\\
+　また, Hodgkin-Huxley方程式はNEURON内においてMOD形式で次のように記述されている.\\
 {\scriptsize
-\lstinputlisting[caption=hh.mod,label=mod-hh,frame=single]{src/mod/hh.mod}
+\lstinputlisting[title=hh.mod,label=mod-hh,frame=single]{src/mod/hh.mod}
 }
-先行研究の中でも示されている通り,この計算式の中で多くの計算時間を必要とするのはDERIVATIVEであり,
+先行研究\cite{miyamoto-master}の中でも示されている通り,この計算式の中で多くの計算時間を必要とするのはDERIVATIVEであり,
 以下のパラメータの多くはDERIVATIVEの計算を行う上でキャッシュヒット率をあげることを目的としている.\\
 \input{method/algorithm/simd}
 
@@ -17,9 +16,8 @@ Hodgkin-Huxley方程式は,NEURON内においてMOD形式で次のように記�
 
 \subsection{実行マシンに依存するパラメータ}
 近年のCPUはシングルコアではなく,マルチコアによって計算を並列化することで全体としての計算能力を向上させている.\\
-この並列化を行う上で, 本研究では主にOpenMPとMPIを用いたハイブリッド並列に取り組んだ. またハイブリッド並列を行う上で,
-OpenMPのスレッド数, MPIのプロセス数そして各スレッドに割り振られるバッファサイズをパラメータとして用いた.\\
-
+　この並列化を行う上で, 本研究では主にOpenMPとMPIを用いたハイブリッド並列に取り組んだ. またハイブリッド並列を行う上で,
+OpenMPのスレッド数, MPIのプロセス数そして各スレッドに割り振られるバッファサイズをパラメータとして用いた.
 % ハイブリッド並列について
 \input{method/algorithm/hybrid}
 

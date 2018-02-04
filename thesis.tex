@@ -18,7 +18,8 @@
 % 本文中の図のスペース
 \setlength\intextsep{0truept}
 % 図とキャプションの間のスペース
-\setlength\abovecaptionskip{1truemm}
+\setlength\abovecaptionskip{2truemm}
+
 \setcounter{secnumdepth}{4}
 %% 代わりに以下2行でもOK
 %% \usepackage{geometry}
@@ -62,11 +63,6 @@
   showstringspaces=false
 }
 
-%% マクロ（ユーザ定義命令）を宣言
-\newcommand{\hoge}{\textcolor{red}{ほげほげ}}    % 引数なし
-\newcommand{\Hoge}[2]{\textcolor{#1}{#2#2}}      % 引数あり
-\newcommand{\HOGE}[2][red]{\textcolor{#1}{#2#2}} % 引数あり（オプション引数付き）
-
 \makeatletter
 
 \def\@thesis{卒業論文}
@@ -80,26 +76,45 @@
 
 \def\@maketitle{
 \begin{center}
-{\huge \@thesis \par} %修士論文と記載される部分
+\vspace{15mm}
+{\huge \underline{\@thesis} \par}
+\vspace{60mm}
+{\huge\bf \@title \par}% 論文のタイトル部分
+\vspace{50mm}
+{\LARGE \underline{平成30年2月5日 提出}\par}	% 提出年月日部分
 \vspace{10mm}
-{\LARGE\bf \@title \par}% 論文のタイトル部分
+{\LARGE \underline{\@department} \par}	% 所属部分
+\vspace{5mm}
+{\LARGE \underline{学生証番号 \@id \@author} \par}% 氏名
 \vspace{10mm}
-{\Large \@date 提出\par}	% 提出年月日部分
-\vspace{20mm}
-{\Large 指導教員 \@professor 教授\par} % 指導教員
-\vspace{20mm}
-{\Large \@department \par}	% 所属部分
+{\LARGE \underline{指導教員 \@professor 教授}\par} % 指導教員
 % {\Large 学籍番号　\@id \par}	% 学籍番号部分
-\vspace{10mm}
-{\large \@id \@author}% 氏名
 \end{center}
-\par\vskip 1.5em
+\thispagestyle{empty}
+\addtocounter{page}{-1}
+\clearpage
+}
+
+\def\makebacktitle{
+  {\huge 以上}
+  \vskip 80mm
+  \begin{center}
+    \vskip 10mm
+    {\huge \@thesis}
+    \vskip 10mm
+    {\huge \underline{平成30年2月5日 提出} \par}
+    \vskip 40mm
+    {\huge \underline{学生証番号\@id 井上裕太} \par}
+  \end{center}
+  \thispagestyle{empty}
+  \clearpage
+  \addtocounter{page}{-1}
 }
 
 \makeatother
 
 \title{\underline{神経回路シミュレーションにおける}\\\underline{イオンチャンネルダイナミクス計算の}\\\underline{最適化コードの自動生成}}
-\date{\today}
+\date{平成30年2月5日}
 \department{東京大学工学部機械情報工学科}
 \id{03-150268}
 \author{井上裕太}
@@ -135,5 +150,9 @@
 \bibliographystyle{junsrt}
 \bibliography{citation/library}
 \clearpage
-% \input{appendix/thanks}
+\input{appendix/thanks}
+\input{appendix/appendix}
+
+\makebacktitle
+
 \end{document}

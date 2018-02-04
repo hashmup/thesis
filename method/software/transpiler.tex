@@ -1,24 +1,23 @@
 \subsection{トランスパイラ}
 先行研究\cite{miyamoto-master}では,モデルに依存するパラメータを調節するために,
 計算モデルが記述されたMODファイルからnmodlを介して生成されたCファイルを手動で変更を加えることで最適化を図っていた.\\
-本研究では,自動チューニングを目的としているため,このプロセスも自動化する必要があり,そのためにこのMODからCへ変換するトランスパイラを作成した.\\
-MODをパースするにあたってはDomain-Specific Languagesを作成するためのPythonライブラリである,textX\cite{textX-repo}を利用し,
+　本研究では,自動チューニングを目的としているため,このプロセスも自動化する必要があり,そのためにこのMODからCへ変換するトランスパイラを作成した.\\
+　MODをパースするにあたってはDomain-Specific Languagesを作成するためのPythonライブラリである,textX\cite{textX-repo}を利用し,
 またMODのContext Free GrammarはMODファイルからNeuroMLを生成するためのプロジェクトであるpynmodl\cite{pynmodl-repo}のプログラムを用いた.\\
 
 \subsubsection{nmodl}
 NEURONに付属しているトランスパイラであるnmodlは,MODファイルをlexとyacc\cite{lex}を用いてパースした情報を
 C言語のテンプレートに埋め込むことで対応するC言語のファイルを出力している.\\
-このテンプレート化された部分の中にはNEURON本体とリンクさせるために必要な情報も多数あるため,
+　このテンプレート化された部分の中にはNEURON本体とリンクさせるために必要な情報も多数あるため,
 本研究で作成するトランスパイラもnmodlのC言語テンプレートをベースに利用した.\\
 
 \subsubsection{textX}
 MODファイルから抽象木を構築するために, Domain Specific Language（以下DSL）作成用のPythonライブラリであるtextX\cite{textX}を用いた.
 DSLとは, C言語等に代表される汎用言語ではなく, 微分方程式の記述を行うMODファイルのように応用先が特定の領域に限られる言語である.\\
-一般的に言語を作成しようとした時, Lexer, ParserそしてCode generationという3つの機能を実装する必要がある.
+　一般的に言語を作成しようとした時, Lexer, ParserそしてCode generationという3つの機能を実装する必要がある.
 しかしながら, 言語のメタモデルを作成することでtextXは内部的にLexerとParserの役割を果たすため,
 メタモデルを記述したファイル（.txという拡張子を用いる）と, メタモデルから生成された抽象木からコードを生成するプログラムを実装することでDSLに対するコンパイラを作成することができる.\\
-また, MODファイルのメタモデルは前述したpynmodlというプロジェクトで作成されたものを用いた.\\
-図\ref{fig:hh-mod-ast}はHodgkin-HuxleyのMODファイルの抽象木を表しており, 以下textXから得られた抽象木からC言語のプログラムを生成する方法について述べる.\\
+またMODファイルのメタモデルは前述したpynmodlというプロジェクトで作成されたものを用いた. 図\ref{fig:hh-mod-ast}はそのメタモデルを用いてHodgkin-HuxleyのMODファイルをパースした結果の抽象木を表している.\\
 
 \begin{figure}[htb]
 % h:here, t:top, b:bottom, p:page
@@ -33,8 +32,7 @@ DSLとは, C言語等に代表される汎用言語ではなく, 微分方程式
 \subsubsection{構成}
 \ref{sec:algorithm}のアルゴリズムで触れた中で,トランスパイラ内で実装を行ったのはモデルに依存するパラメータであり,
 NEURON本体で細胞単位での計算の並列化等の設定もできるため,主に逐次プログラムの最適化を主眼に置いた.\\
-
-MODファイルをC言語のファイルに変換する際,変換されたC言語のファイルは,\\
+　MODファイルをC言語のファイルに変換する際,変換されたC言語のファイルは,\\
 \begin{itemize}
 \item nmodl内でテンプレート化されている共通部分（base）
 \item グローバル変数や関数定義部分（definition）
@@ -56,17 +54,17 @@ MODファイルをC言語のファイルに変換する際,変換されたC言�
 
 この中で計算を行うのは4, 5, 6の部分であるが, これらは2や3の部分を通して疎に繋がってはいるものの,
 互いに独立性が非常に高い.\\
-そのため, それぞれに対して個別に最適化を行い最終的に組み合わせてC言語のファイルを生成する方法を取ることができる.\\
+　そのため, それぞれに対して個別に最適化を行い最終的に組み合わせてC言語のファイルを生成する方法を取ることができる.
 本研究では図\ref{fig:transpiler}のように, まずtextXを用いてMODファイルから抽象木を生成し,
 その抽象木を解析することで最適化に用いるパラメータの候補を生成したのち,
 それらのパラメータと抽象木から個々に最適化を行ったものをテンプレートに埋め込むことで対応するC言語のファイルを生成した.\\
 
 またこのようにC言語に変換する部分と抽象木自体を解析する部分を完全に分離するだけでなく,
 それぞれ内部でさらに役割ごとに分割することで,最適化の方法を追加する際にも変更しやすくなる.\\
-仮にこれらがすべて密に繋がっていた場合, 新しい方法を追加するためには関連する箇所をすべて正確に変更する必要があり,
+　仮にこれらがすべて密に繋がっていた場合, 新しい方法を追加するためには関連する箇所をすべて正確に変更する必要があり,
 規模が大きくなるにつれて難しくなっていくが, 細かく担当する範囲を分割していることで例えばODEのみに関連する変更を加えたい場合は,
 ODEを担当するモジュールのみの変更でよくなる.\\
-さらに, それぞれのモジュールが抽象木の情報とパラメータを直接受け取るため, モジュールごとに細かい最適化を行うことができるとともに,
+　さらに, それぞれのモジュールが抽象木の情報とパラメータを直接受け取るため, モジュールごとに細かい最適化を行うことができるとともに,
 シミュレータからもどの最適化をどの関数に適用するといった場合分けをしやすくなる.\\
 
 \begin{figure}[htb]
@@ -79,15 +77,9 @@ ODEを担当するモジュールのみの変更でよくなる.\\
 \end{figure}~\\
 
 \paragraph{変数の取り出し}~\\
-SIMD化と配列のくくり出しを行うために, MODファイルの中で利用されている変数を取り出す必要がある.\\
-これは前述のhh.modを例にすると,
+　SIMD化と配列のくくり出しを行うために, MODファイルの中で利用されている変数を取り出す必要がある. これは前述のhh.modを例にすると,
 {\footnotesize
-\begin{lstlisting}[caption=Hodgikin-Huxleyモデルの計算式,label=hh-mod-calc, frame=single]
-? interface
-NEURON {
-  GLOBAL minf, hinf, ninf, mtau, htau, ntau
-}
-
+\begin{lstlisting}[title=Hodgikin-Huxleyモデルの計算式,label=hh-mod-calc, frame=single]
 ? currents
 BREAKPOINT {
   SOLVE states METHOD cnexp
@@ -108,17 +100,17 @@ DERIVATIVE states {
 \end{lstlisting}
 }
 の部分から取得できることがわかる.\\
-pynmodlでパースした抽象木では, Breakpoint, Derivative, Globalという名前がつけられているためそれぞれの式は抽象木のrootをrootという変数で保持しているとすると,
+　pynmodlでパースした抽象木では, Breakpoint, Derivativeという名前がつけられているためそれぞれの式は抽象木の根をrootという変数で保持しているとすると,\\
 {\footnotesize
-\begin{lstlisting}[caption=計算式の取得,label=obtain-vars, frame=single]
+\begin{lstlisting}[title=計算式の取得,label=obtain-eq, frame=single]
 derivative_stmts = children_of_type('Derivative', root)[0].b.stmts
 breakpoint_stmts = children_of_type('Breakpoint', root)[0].b.stmts
 \end{lstlisting}
 }
 として取得することができる.\\
-また, これらの式から変数を取得するには,
+　また, これらの式から変数を取得するには,
 {\footnotesize
-\begin{lstlisting}[caption=変数の取得,label=obtain-vars, frame=single]
+\begin{lstlisting}[title=変数の取得,label=obtain-vars, frame=single]
 # 式を変数に分離する
 parse_into_token(exp) {
     # 変数の区切りとなる文字の定義
@@ -185,18 +177,45 @@ get_symbols(path, stmts) {
 とすることで取得でき, DerivativeとBreakpointそれぞれに含まれる式を引数とすることで変数名のリストを取得できる.\\
 
 \paragraph{SIMD化}~\\
-SIMD化をするためには, 計算式の中で用いられてる変数を配列化する必要がある.\\
-ここで必要となるのは,
+　SIMD化をするためには, 計算式の中で用いられてる変数を配列化する必要がある.\\
+　ここではhh.modの内部で定義されたDERIVATIVE中の式一つを例として実装を説明する,\\
+\begin{table}[htb]
+  \begin{center}
+{\footnotesize
+\begin{framed}
+\begin{verbatim}
+m' =  (minf-m)/mtau
+\end{verbatim}
+\end{framed}
+}
+\end{center}
+\end{table}~\\
+　上記の式は, NEURON付属のトランスパイラであるnrnivmodlを用いて変換した結果を疑似コードで表すと,\\
+\clearpage
+\begin{table}[htb]
+  \begin{center}
+{\footnotesize
+\begin{framed}
+\begin{verbatim}
+for i = 0 to number of compartment {
+    m = m + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / mtau)))*
+    (- ( ( ( minf ) ) / mtau ) / ( ( ( ( - 1.0 ) ) ) / mtau ) - m)
+}
+\end{verbatim}
+\end{framed}
+}
+\end{center}
+\end{table}~\\
+　と表される. しかしながら, この式はすべてのコンパートメントに対して逐次的に適用されているが, それぞれの変数をベクトルではなくスカラとして扱っているためコンパイラによるSIMD化が難しい.\\
+　そこで, このようなコンパートメントに対して逐次的に実行される式の変数を配列化することによりコンパイラによるSIMD化の促進を目指した.　ここで必要となるのは,
 \begin{enumerate}
 \item 配列を定義する
 \item 計算式の変数名を配列名に変更する
 \end{enumerate}
 の2点である.\\
-これは変数を取得したのちに, SIMD化を行う変数を選択し式の中で該当する変数を配列化すれば良い.\\
-本研究において配列名は, \_変数名\_tableとして定義することとする.\\
+　これは変数を取得したのちに, SIMD化を行う変数を選択し式の中で該当する変数を配列化すれば良い. また, 本研究において配列名は\_変数名\_tableとして定義することとする.\\
 {\footnotesize
-\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars, frame=single]
-
+\begin{lstlisting}[title=計算式内の変数の配列化,label=simdization, frame=single]
 get_simdize_table(root, token_list) {
     code = ""
     # SIMD 化する変数のリストそれぞれに対応する配列を定義する
@@ -238,17 +257,17 @@ simdize_exp(exp, token_list) {
     }
     # 区切り文字の空白を最後尾に追加しているので, 空白を抜かして返す
     return simdized_exp[:simdized_exp.size() - 1]
+}
 \end{lstlisting}
 }
 
 \paragraph{配列構造のくくり出し}~\\
-\ref{sec:algorithm}において,Union-Find木を用いてMODファイル内の式を分類することで,
+　\ref{sec:algorithm}において,Union-Find木を用いてMODファイル内の式を分類することで,
 配列としてくくり出せる変数をグループ化する手法について述べた.\\
-グループ化された変数をもとに配列をくくり出す際, 配列に対するアクセス方法が変わってしまうため対応する箇所をすべて変更しなければならないという
+　グループ化された変数をもとに配列をくくり出す際, 配列に対するアクセス方法が変わってしまうため対応する箇所をすべて変更しなければならないという
 問題が生じた. そこで, 配列へのアクセスをマクロを通して行うことで同一の方法でくくり出した配列にもアクセスできるようにした.\\
 {\footnotesize
-\begin{lstlisting}[caption=計算式内の変数の配列化,label=obtain-vars, frame=single]
-
+\begin{lstlisting}[title=配列構造のくくり出し,label=merge-array, frame=single]
 get_optimize_table(token_list, merge_table_list) {
     """
     " token_list: 配列化する変数名のリスト [変数1, 変数2,...]

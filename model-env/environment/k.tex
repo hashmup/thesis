@@ -2,7 +2,7 @@
 \begin{table}[htb]
   \caption {京でのジョブ関連コマンド}
   \begin{center}
-    \begin{tabular}{|c|p{12cm}|}
+    \begin{tabular}{|p{2cm}|p{12cm}|}
       \hline
       コマンド & 説明 \\ \hline
       pjsub & pjsub サブミットするスクリプトのパス\\
@@ -15,11 +15,12 @@
 \end{table}
 
 {\footnotesize
-\lstinputlisting[caption=京のジョブスクリプト例, label=k-job-script,frame=single]{src/job/k-job}
+\lstinputlisting[title=京のジョブスクリプト例, label=k-job-script,frame=single]{src/job/k-job}
 }
 
 \begin{table}[htb]
-  \caption {京でのコマンド実行例}
+  \begin{center}
+  \title {京でのコマンド実行例}
 {\scriptsize
 \begin{framed}
 \begin{verbatim}
@@ -35,18 +36,19 @@ JOB_ID   JOB_NAME  MD  ST   USER    GROUP  START_DATE       ELAPSE_TIM  NODE_REQ
 \end{verbatim}
 \end{framed}
 }
+\end{center}
 \end{table}
 
 \begin{table}[htb]
   \caption {京でのジョブの状態}
   \begin{center}
-    \begin{tabular}{|c|p{12cm}|}
+    \begin{tabular}{|p{2cm}|p{12cm}|}
       \hline
       ジョブのステータス & 説明 \\ \hline
       QUE & ジョブキューで待機中.\\ \hline
-      STI & ジョブの実行に必要なファイルをステージインしている.\\ \hline
+      STI & ジョブの実行に必要なファイルを計算ノードにステージインしている.\\ \hline
       RUN & ジョブを実行中.\\ \hline
-      STO & ジョブの実行結果をステージアウトしている.\\ \hline
+      STO & ジョブの実行結果を計算ノードからステージアウトしている.\\ \hline
     \end{tabular}
   \end{center}
 \end{table}

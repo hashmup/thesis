@@ -1,7 +1,7 @@
 \paragraph{クラスタでのジョブの実行}~\\
 \begin{table}[htb]
-  \caption {クラスタでのジョブ関連コマンド}
   \begin{center}
+    \caption {クラスタでのジョブ関連コマンド}
     \begin{tabular}{|c|p{12cm}|}
       \hline
       コマンド & 説明 \\ \hline
@@ -12,15 +12,15 @@
       qstat & 現在実行または待機中のジョブの一覧を表示する\\ \hline
     \end{tabular}
   \end{center}
-\end{table}
-\clearpage
+\end{table}~\\
 
 {\footnotesize
-\lstinputlisting[caption=クラスタのジョブスクリプト例, label=cluster-job-script,frame=single]{src/job/cluster-job}
+\lstinputlisting[title=クラスタのジョブスクリプト例, label=cluster-job-script,frame=single]{src/job/cluster-job}
 }
 \vspace{1cm}
 \begin{table}[htb]
-  \caption {クラスタでのコマンド実行例}
+  \begin{center}
+  \title {クラスタでのコマンド実行例}
 {\footnotesize
 \begin{framed}
 \begin{verbatim}
@@ -38,12 +38,13 @@ Job ID                    Name             User            Time Use S Queue
 \end{verbatim}
 \end{framed}
 }
+\end{center}
 \end{table}
 % \caption{クラスタでのコマンド実行例}
 \clearpage
 \begin{table}[htb]
-  \caption {クラスタでのジョブの状態}
   \begin{center}
+    \caption {クラスタでのジョブの状態}
     \begin{tabular}{|c|p{12cm}|}
       \hline
       ジョブのステータス & 説明 \\ \hline
